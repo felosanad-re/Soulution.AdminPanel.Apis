@@ -37,13 +37,24 @@ namespace AdminPanel.Apis
             builder.Services.AddApplicationServices(builder.Configuration);
 
             builder.Services.AddErrorMessage();
+
+            //Add Policy
+            builder.Services.AddCors(action =>
+            {
+                action.AddPolicy("Angular", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
             #endregion
 
             var app = builder.Build();
 
             // Database Initialize
             await app.InitializeDatabaseAsync();
-
             app.UseMiddleware<ExceptionMiddleware>(); // Global Error Handler
             #region Add Configurations MidealWears
             // Configure the HTTP request pipeline.
@@ -55,6 +66,7 @@ namespace AdminPanel.Apis
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("Angular");
 
             app.UseAuthentication();
             app.UseAuthorization();

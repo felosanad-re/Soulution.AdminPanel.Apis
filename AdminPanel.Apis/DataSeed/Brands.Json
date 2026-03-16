@@ -1,0 +1,27 @@
+[
+  {
+    "brandName": "Apple",
+    "description": "Premium technology brand",
+    "logo": "apple.png"
+  },
+  {
+    "brandName": "Samsung",
+    "description": "Global electronics company",
+    "logo": "samsung.png"
+  },
+  {
+    "brandName": "Dell",
+    "description": "Computer technology company",
+    "logo": "dell.png"
+  },
+  {
+    "brandName": "Lenovo",
+    "description": "Leading laptop manufacturer",
+    "logo": "lenovo.png"
+  },
+  {
+    "brandName": "Sony",
+    "description": "Electronics and audio brand",
+    "logo": "sony.png"
+  }
+]

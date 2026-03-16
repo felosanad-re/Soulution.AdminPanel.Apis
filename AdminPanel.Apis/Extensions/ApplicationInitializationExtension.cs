@@ -1,7 +1,7 @@
 ﻿using AdminPanel.Core.Service_Contract;
 using AdminPanel.Repositories.Data;
+using AdminPanel.Repositories.Data.Seed;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace AdminPanel.Apis.Extensions
 {
@@ -23,6 +23,7 @@ namespace AdminPanel.Apis.Extensions
             {
                 await _context.Database.MigrateAsync();
                 await _dbInitialization.CreateInitializationAsync();
+                await AdminDbContextSeeder.SeederAsync(_context);
             }
             catch (Exception ex)
             {

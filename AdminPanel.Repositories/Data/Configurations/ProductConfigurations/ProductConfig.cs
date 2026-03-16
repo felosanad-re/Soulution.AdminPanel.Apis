@@ -14,7 +14,8 @@ namespace AdminPanel.Repositories.Data.Configurations.ProductConfigurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.Property(P => P.Price).HasColumnType("decimal(18, 2)");
-            builder.Property(P => P.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            builder.Property(P => P.CreatedAt).HasColumnType("datetime2(0)");
+            builder.Property(P => P.LastModifiedAt).HasColumnType("datetime2(0)");
 
             builder.HasOne(P => P.Brand)
                 .WithMany()

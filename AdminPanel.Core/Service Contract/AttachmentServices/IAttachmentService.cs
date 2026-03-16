@@ -1,0 +1,13 @@
+﻿using Microsoft.AspNetCore.Http;
+
+namespace AdminPanel.Core.Service_Contract.AttachmentServices
+{
+    public interface IAttachmentService
+    {
+        // Take Any Type [Image || PDF]
+        Task<string> UploadAsync(IFormFile file, string folderName, IEnumerable<string> allowedExtensions, int maxSize);
+        // Add Multi Images
+        Task<List<string>> UploadsAsync(List<IFormFile> files, string folderName, IEnumerable<string> allowedExtensions, int maxSize);
+        bool DeleteImage(string filePath);
+    }
+}

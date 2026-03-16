@@ -10,8 +10,8 @@ namespace AdminPanel.Core.Entities
     {
         public int Id { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset LastModifiedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime LastModifiedAt { get; set; }
         public string CreatedBy { get; set; } = string.Empty;
         public string ModifiedBy { get; set; } = string.Empty;
     }

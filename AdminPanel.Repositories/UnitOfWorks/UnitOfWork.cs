@@ -1,6 +1,6 @@
 ﻿using AdminPanel.Core.Entities;
 using AdminPanel.Core.GenericRepositories;
-using AdminPanel.Core.UnitOfWord;
+using AdminPanel.Core.UnitOfWork;
 using AdminPanel.Repositories.Data;
 using AdminPanel.Repositories.GenericRepositories;
 

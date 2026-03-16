@@ -1,0 +1,27 @@
+[
+  {
+    "categoryName": "Laptops",
+    "description": "Portable computers",
+    "image": "laptops.png"
+  },
+  {
+    "categoryName": "Smartphones",
+    "description": "Mobile phones",
+    "image": "phones.png"
+  },
+  {
+    "categoryName": "Headphones",
+    "description": "Audio devices",
+    "image": "headphones.png"
+  },
+  {
+    "categoryName": "Accessories",
+    "description": "Electronic accessories",
+    "image": "accessories.png"
+  },
+  {
+    "categoryName": "Tablets",
+    "description": "Portable tablet devices",
+    "image": "tablets.png"
+  }
+]

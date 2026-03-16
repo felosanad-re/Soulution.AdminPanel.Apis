@@ -119,7 +119,7 @@ namespace AdminPanel.Services.AuthServices
             var res = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
             if (!res.Succeeded) return new ServiceResult()
             { 
-                Succeed=false,
+                Succeed = false,
                 Message = "Password Not Set",
                 Errors = res.Errors.Select(e => e.Description)
             };
@@ -132,9 +132,9 @@ namespace AdminPanel.Services.AuthServices
         #endregion
 
         #region ForgetPasswordAsync
-        public async Task<ServiceResult> ForgetPasswordAsync(string email)
+        public async Task<ServiceResult> ForgetPasswordAsync(ForgetPasswordDTO request)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(request.EmailOrUserName);
             if (user is null) return new ServiceResult()
             {
                 Message = "User not found",
@@ -142,7 +142,7 @@ namespace AdminPanel.Services.AuthServices
             };
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             token = WebUtility.UrlEncode(token);
-            var link = $"https://localhost:4200/resetPassword?userId={user.Id}&token={token}";
+            var link = $"https://localhost:4200/resetpassword?userId={user.Id}&token={token}";
             var message = $@"<h2>Password Reset</h2>
                 <p>We received a request to reset your password.</p>
                 <p>
@@ -171,7 +171,7 @@ namespace AdminPanel.Services.AuthServices
                 Succeed = false,
                 Message = "User Not Found"
             };
-
+            //request.Token = WebUtility.UrlDecode(request.Token); // if i have token errors
             var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
             if (!result.Succeeded) return new ServiceResult() { Succeed = false, Message = string.Join(",", result.Errors.Select(e => e.Description)) };
 

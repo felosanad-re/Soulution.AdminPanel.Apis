@@ -1,7 +1,7 @@
 ﻿using AdminPanel.Core.Entities;
 using AdminPanel.Core.GenericRepositories;
 
-namespace AdminPanel.Core.UnitOfWord
+namespace AdminPanel.Core.UnitOfWork
 {
     public interface IUnitOfWork: IAsyncDisposable
     {

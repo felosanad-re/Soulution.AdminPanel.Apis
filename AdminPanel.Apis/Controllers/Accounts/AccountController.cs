@@ -31,9 +31,9 @@ namespace AdminPanel.Apis.Controllers.Accounts
         #endregion
 
         [HttpPost("ForgetPassword")]
-        public async Task<ActionResult> ForgetPassword([FromBody] string email)
+        public async Task<ActionResult> ForgetPassword([FromBody] ForgetPasswordDTO request)
         {
-            var user = await _authService.ForgetPasswordAsync(email);
+            var user = await _authService.ForgetPasswordAsync(request);
             if (user == null) return BadRequest(new {Message = "Invalid Email"});
 
             return Ok(user);

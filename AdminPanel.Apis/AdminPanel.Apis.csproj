@@ -21,4 +21,8 @@
     <ProjectReference Include="..\AdminPanel.Services\AdminPanel.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Files\Images\" />
+  </ItemGroup>
+
 </Project>

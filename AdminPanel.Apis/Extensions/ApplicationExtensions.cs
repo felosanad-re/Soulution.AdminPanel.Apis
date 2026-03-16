@@ -1,10 +1,15 @@
 ﻿using AdminPanel.Apis.Helpers;
+using AdminPanel.Apis.Helpers.Mapping;
 using AdminPanel.Core.Service_Contract;
+using AdminPanel.Core.Service_Contract.AttachmentServices;
 using AdminPanel.Core.Service_Contract.AuthServices;
-using AdminPanel.Core.UnitOfWord;
+using AdminPanel.Core.Service_Contract.ProductServices;
+using AdminPanel.Core.UnitOfWork;
 using AdminPanel.Repositories.UnitOfWorks;
 using AdminPanel.Services;
+using AdminPanel.Services.AttachmentServices;
 using AdminPanel.Services.AuthServices;
+using AdminPanel.Services.ProductServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +21,12 @@ namespace AdminPanel.Apis.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration _configuration)
         {
+            // Add Profile Mapping
+            services.AddAutoMapper(typeof(ProfileMapping));
+            // Add Product Service
+            services.AddScoped<IProductService, ProductService>();
+            // Add Attachment Services
+            services.AddScoped<IAttachmentService, AttachmentService>();
             // Add Unit Of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             // Add DbInitialization Services
