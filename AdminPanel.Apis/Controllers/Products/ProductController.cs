@@ -2,7 +2,6 @@
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Specifications;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminPanel.Apis.Controllers.Products

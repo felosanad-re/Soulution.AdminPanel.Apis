@@ -1,4 +1,5 @@
 ﻿using AdminPanel.Core.Entities.Products;
+using AdminPanel.Core.ModelsDto;
 using AdminPanel.Core.ModelsDto.RequestDTO;
 using AdminPanel.Core.ModelsDto.RequestDTO.Products;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
@@ -9,7 +10,7 @@ namespace AdminPanel.Core.Service_Contract.ProductServices
     public interface IProductService
     {
         // Get All Product
-        Task<ResultServiceApplication<IReadOnlyList<ProductToReturnDTO>>> GetAllAsync(ProductParams @params);
+        Task<ResultServiceApplication<PaginationModel<ProductToReturnDTO>>> GetAllAsync(ProductParams @params);
         // Get Product By Id
         Task<ResultServiceApplication<ProductToReturnDTO>>? GetProductDetailsAsync(int id);
 

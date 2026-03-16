@@ -1,4 +1,5 @@
 ﻿using AdminPanel.Core.Entities.Products;
+using AdminPanel.Core.ModelsDto;
 using AdminPanel.Core.ModelsDto.RequestDTO;
 using AdminPanel.Core.ModelsDto.RequestDTO.Products;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
@@ -9,6 +10,7 @@ using AdminPanel.Core.Specifications.ProductSpecifications;
 using AdminPanel.Core.UnitOfWork;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace AdminPanel.Services.ProductServices
 {
@@ -30,14 +32,21 @@ namespace AdminPanel.Services.ProductServices
         #endregion
 
         #region Get All Products
-        public async Task<ResultServiceApplication<IReadOnlyList<ProductToReturnDTO>>> GetAllAsync(ProductParams @params)
+        public async Task<ResultServiceApplication<PaginationModel<ProductToReturnDTO>>> GetAllAsync(ProductParams @params)
         {
-            var spec = new ProductSpec();
+            var spec = new ProductSpec(@params);
             var products = await _unitOfWork.CreateRepository<Product>().GetAllAsyncSpec(spec);
-            if (!products.Any()) return ResultServiceApplication<IReadOnlyList<ProductToReturnDTO>>.Fail("No Product To Show");
+            if (!products.Any()) return ResultServiceApplication<PaginationModel<ProductToReturnDTO>>.Fail("No Product To Show");
             var data = _mapper.Map<IReadOnlyList<ProductToReturnDTO>>(products);
-            return ResultServiceApplication<IReadOnlyList<ProductToReturnDTO>>
-                .Success(data, "There Is Products To Show");
+            var count = data.Count;
+            var pagination = new PaginationModel<ProductToReturnDTO>(
+                @params.PageIndex,
+                @params.PageSize,
+                count,
+                data
+                );
+            return ResultServiceApplication<PaginationModel<ProductToReturnDTO>>
+                .Success(pagination, "There Is Products To Show");
         }
         #endregion
 
@@ -156,7 +165,7 @@ namespace AdminPanel.Services.ProductServices
         }
         #endregion
 
-        #region Delete Mutible Products
+        #region Delete Multi Products
         public async Task<ResultServiceApplication<bool>> DeleteBulkAsync(IEnumerable<int> productsId)
         {
             try
