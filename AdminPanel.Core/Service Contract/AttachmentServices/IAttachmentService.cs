@@ -8,6 +8,6 @@ namespace AdminPanel.Core.Service_Contract.AttachmentServices
         Task<string> UploadAsync(IFormFile file, string folderName, IEnumerable<string> allowedExtensions, int maxSize);
         // Add Multi Images
         Task<List<string>> UploadsAsync(List<IFormFile> files, string folderName, IEnumerable<string> allowedExtensions, int maxSize);
-        bool DeleteImage(string filePath);
+        Task DeleteImageAsync(string fileName, string folderName);
     }
 }

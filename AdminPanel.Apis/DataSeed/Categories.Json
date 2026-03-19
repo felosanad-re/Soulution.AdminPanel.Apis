@@ -2,26 +2,26 @@
   {
     "categoryName": "Laptops",
     "description": "Portable computers",
-    "image": "laptops.png"
+    "image": "Images/categories/laptops.png"
   },
   {
     "categoryName": "Smartphones",
     "description": "Mobile phones",
-    "image": "phones.png"
+    "image": "mages/categories/phones.png"
   },
   {
     "categoryName": "Headphones",
     "description": "Audio devices",
-    "image": "headphones.png"
+    "image": "mages/categories/headphones.png"
   },
   {
     "categoryName": "Accessories",
     "description": "Electronic accessories",
-    "image": "accessories.png"
+    "image": "mages/categories/accessories.png"
   },
   {
     "categoryName": "Tablets",
     "description": "Portable tablet devices",
-    "image": "tablets.png"
+    "image": "mages/categories/tablets.png"
   }
 ]

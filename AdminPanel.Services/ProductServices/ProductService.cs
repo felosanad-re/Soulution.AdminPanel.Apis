@@ -9,8 +9,8 @@ using AdminPanel.Core.Specifications;
 using AdminPanel.Core.Specifications.ProductSpecifications;
 using AdminPanel.Core.UnitOfWork;
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace AdminPanel.Services.ProductServices
 {
@@ -21,13 +21,15 @@ namespace AdminPanel.Services.ProductServices
         private readonly IAttachmentService _attachmentService;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductService> _logger;
+        private readonly IConfiguration _configuration;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ProductService> logger, IAttachmentService attachmentService)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ProductService> logger, IAttachmentService attachmentService, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _attachmentService = attachmentService;
+            _configuration = configuration;
         }
         #endregion
 
@@ -38,7 +40,7 @@ namespace AdminPanel.Services.ProductServices
             var products = await _unitOfWork.CreateRepository<Product>().GetAllAsyncSpec(spec);
             if (!products.Any()) return ResultServiceApplication<PaginationModel<ProductToReturnDTO>>.Fail("No Product To Show");
             var data = _mapper.Map<IReadOnlyList<ProductToReturnDTO>>(products);
-            var count = data.Count;
+            var count = await GetProductCount();
             var pagination = new PaginationModel<ProductToReturnDTO>(
                 @params.PageIndex,
                 @params.PageSize,
@@ -77,21 +79,23 @@ namespace AdminPanel.Services.ProductServices
                     Description = productDTO.Description,
                 };
 
-                // Upload Image
-
-                var extensions = new List<string> { ".png", ".jpg", ".jpeg" };
-                var maxSize = 2_097_152;
+                // Upload Main Image
+                var allowExtentions = _configuration.GetSection("FileSitteng:Allowed_Extentions").Get<string[]>();
+                var maxSize = _configuration.GetValue<int>("FileSitteng:MaxSize");
                 if(productDTO.MainImage != null)
                 {
-                    var folderName = "products";
-                    newProduct.MainImage = await _attachmentService.UploadAsync(productDTO.MainImage, folderName, extensions, maxSize);
+                    var folderName = _configuration["FileSitteng:ProductMainImages"];
+                    newProduct.MainImage = await _attachmentService.UploadAsync(productDTO.MainImage, folderName, allowExtentions, maxSize);
                 }
 
-                // Upload Multi Image
+                // Upload Sub Images
                 if(productDTO.SubImages != null && productDTO.SubImages.Any())
                 {
-                    var folderName = "products/sub";
-                    var imagesUrl = await _attachmentService.UploadsAsync(productDTO.SubImages, folderName, extensions, maxSize);
+                    var folderName = _configuration["FileSitteng:ProductSubImages"];
+                    var imagesUrl = await _attachmentService.UploadsAsync(productDTO.SubImages,
+                        folderName,
+                        allowExtentions,
+                        maxSize);
                     newProduct.SubImages = imagesUrl.Select(url => new ProductImages { ImagesUrl = url }).ToList();
                 }
 
@@ -105,7 +109,7 @@ namespace AdminPanel.Services.ProductServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultServiceApplication<ProductToReturnDTO>.Fail("Error Occured While Creating Product");
+                return ResultServiceApplication<ProductToReturnDTO>.Fail(ex.Message);
             }
         }
         #endregion
@@ -115,13 +119,13 @@ namespace AdminPanel.Services.ProductServices
         {
             try
             {
+                var allowExtentions = _configuration.GetSection("FileSitteng:Allowed_Extentions").Get<string[]>();
+                var maxSize = _configuration.GetValue<int>("FileSitteng:MaxSize");
                 var productRepo = _unitOfWork.CreateRepository<Product>();
                 var product = await productRepo.GetAsync(updatedProduct.Id);
-                var extensions = new List<string> { ".png", ".jpg", ".jpeg" };
-                var maxSize = 2_097_152;
                 if (product == null) return ResultServiceApplication<ProductToReturnDTO>
                     .Fail("There Is No Product Found");
-                
+
                 product.ProductName = updatedProduct.ProductName;
                 product.BrandId = updatedProduct.BrandId;
                 product.CategoryId = updatedProduct.CategoryId;
@@ -133,22 +137,22 @@ namespace AdminPanel.Services.ProductServices
                 if(updatedProduct.MainImage != null)
                 {
                     // Delete Old Image
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Files", "products", product.MainImage);
-                    _attachmentService.DeleteImage(filePath);
+                    await _attachmentService.DeleteImageAsync(product.MainImage, _configuration["FileSitteng:ProductMainImages"]!);
                     var folderName = "products";
-                    product.MainImage = await _attachmentService.UploadAsync(updatedProduct.MainImage, folderName, extensions, maxSize);
+                    product.MainImage = await _attachmentService.UploadAsync(updatedProduct.MainImage, folderName, allowExtentions, maxSize);
                 }
                 // Edit Sub Images
                 if(updatedProduct.SubImages != null && updatedProduct.SubImages.Any())
                 {
+                    var folderName = _configuration["FileSitteng:ProductSubImages"];
                     // Delete Old Images
                     foreach (var oldImage in product.SubImages)
                     {
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files/products/sub", oldImage.ImagesUrl);
-                        _attachmentService.DeleteImage(filePath);
+                        if (!string.IsNullOrEmpty(oldImage.ImagesUrl))
+                            await _attachmentService.DeleteImageAsync(oldImage.ImagesUrl, folderName!);
                     }
-                    var folderName = "products/sub";
-                    var imagesUrl = await _attachmentService.UploadsAsync(updatedProduct.SubImages, folderName, extensions, maxSize);
+
+                    var imagesUrl = await _attachmentService.UploadsAsync(updatedProduct.SubImages, folderName, allowExtentions, maxSize);
                     product.SubImages = imagesUrl.Select(url => new ProductImages { ImagesUrl = url }).ToList();
                 }
                 productRepo.Update(product);
@@ -160,13 +164,13 @@ namespace AdminPanel.Services.ProductServices
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultServiceApplication<ProductToReturnDTO>.Fail("there is a problem with edit product");
+                return ResultServiceApplication<ProductToReturnDTO>.Fail(ex.Message);
             }
         }
         #endregion
 
         #region Delete Multi Products
-        public async Task<ResultServiceApplication<bool>> DeleteBulkAsync(IEnumerable<int> productsId)
+        public async Task<ResultServiceApplication<bool>> DeleteBulkAsync(List<int> productsId)
         {
             try
             {
@@ -215,6 +219,15 @@ namespace AdminPanel.Services.ProductServices
                 return ResultServiceApplication<ProductToReturnDTO>.Fail("There Is a Problem With Deleted Product");
             }
         }
+        #endregion
+
+        #region Get Product Count
+        public async Task<int> GetProductCount()
+        {
+            var result = await _unitOfWork.CreateRepository<Product>().GetAllAsync();
+            if (!result.Any()) return 0;
+            return result.Count;
+        } 
         #endregion
     }
 }

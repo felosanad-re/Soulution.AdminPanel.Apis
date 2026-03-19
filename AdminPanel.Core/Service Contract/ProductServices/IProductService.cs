@@ -21,6 +21,7 @@ namespace AdminPanel.Core.Service_Contract.ProductServices
         // Delete one product
         Task<ResultServiceApplication<ProductToReturnDTO>> DeleteProductAsync(int id);
         // Delete Bulk Products
-        Task<ResultServiceApplication<bool>> DeleteBulkAsync(IEnumerable<int> productsId);
+        Task<ResultServiceApplication<bool>> DeleteBulkAsync(List<int> productsId);
+        Task<int> GetProductCount();
     }
 }

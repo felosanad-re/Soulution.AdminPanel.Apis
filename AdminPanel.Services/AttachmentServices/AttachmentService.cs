@@ -39,14 +39,17 @@ namespace AdminPanel.Services.AttachmentServices
             return fileNames;
         }
 
-        public bool DeleteImage(string filePath)
+        public Task DeleteImageAsync(string fileName, string folderName)
         {
-            if(File.Exists(filePath))
-            {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "Files",
+                "Images",
+                folderName, // represent Saved folder[products- brands...]
+                fileName);
+            if (File.Exists(filePath))
                 File.Delete(filePath);
-                return true;
-            }
-            return false;
+            return Task.CompletedTask;
         }
     }
 }

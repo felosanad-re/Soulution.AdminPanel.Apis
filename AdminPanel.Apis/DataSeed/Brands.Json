@@ -2,26 +2,26 @@
   {
     "brandName": "Apple",
     "description": "Premium technology brand",
-    "logo": "apple.png"
+    "logo": "Images/Brands/apple.png"
   },
   {
     "brandName": "Samsung",
     "description": "Global electronics company",
-    "logo": "samsung.png"
+    "logo": "Images/Brands/samsung.png"
   },
   {
     "brandName": "Dell",
     "description": "Computer technology company",
-    "logo": "dell.png"
+    "logo": "Images/Brands/dell.png"
   },
   {
     "brandName": "Lenovo",
     "description": "Leading laptop manufacturer",
-    "logo": "lenovo.png"
+    "logo": "Images/Brands/lenovo.png"
   },
   {
     "brandName": "Sony",
     "description": "Electronics and audio brand",
-    "logo": "sony.png"
+    "logo": "Images/Brands/sony.png"
   }
 ]

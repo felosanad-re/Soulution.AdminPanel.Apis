@@ -3,15 +3,15 @@
     "productName": "MacBook Pro M3",
     "description": "Apple powerful laptop with M3 chip",
     "price": 2200,
-    "mainImage": "macbookpro-main.jpg",
+    "mainImage": "Files/Images/products/main/macbookpro-main.jpg",
     "brandId": 1,
     "categoryId": 5,
     "stock": 15,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "macbookpro-1.jpg" },
-      { "imagesUrl": "macbookpro-2.jpg" },
-      { "imagesUrl": "macbookpro-3.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/macbookpro-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/macbookpro-2.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/macbookpro-3.jpg" }
     ]
   },
 
@@ -19,14 +19,14 @@
     "productName": "MacBook Air M2",
     "description": "Lightweight Apple laptop",
     "price": 1600,
-    "mainImage": "macbookair-main.jpg",
+    "mainImage": "Files/Images/products/main/macbookair-main.jpg",
     "brandId": 1,
     "categoryId": 5,
     "stock": 5,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "macbookair-1.jpg" },
-      { "imagesUrl": "macbookair-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/macbookair-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/macbookair-2.jpg" }
     ]
   },
 
@@ -34,15 +34,15 @@
     "productName": "iPhone 15 Pro",
     "description": "Latest Apple smartphone",
     "price": 1200,
-    "mainImage": "iphone15-main.jpg",
+    "mainImage": "Files/Images/products/main/iphone15-main.jpg",
     "brandId": 1,
-    "categoryId": 6,
+    "categoryId": 1,
     "stock": 20,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "iphone15-1.jpg" },
-      { "imagesUrl": "iphone15-2.jpg" },
-      { "imagesUrl": "iphone15-3.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/iphone15-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/iphone15-2.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/iphone15-3.jpg" }
     ]
   },
 
@@ -50,14 +50,14 @@
     "productName": "iPhone 14",
     "description": "Apple smartphone previous generation",
     "price": 900,
-    "mainImage": "iphone14-main.jpg",
+    "mainImage": "Files/Images/products/main/iphone14-main.jpg",
     "brandId": 1,
-    "categoryId": 6,
+    "categoryId": 1,
     "stock": 8,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "iphone14-1.jpg" },
-      { "imagesUrl": "iphone14-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/iphone14-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/iphone14-2.jpg" }
     ]
   },
 
@@ -65,62 +65,74 @@
     "productName": "iPad Pro",
     "description": "Apple tablet for productivity",
     "price": 1100,
-    "mainImage": "ipad-main.jpg",
+    "mainImage": "Files/Images/products/main/ipad-main.jpg",
     "brandId": 1,
-    "categoryId": 9,
+    "categoryId": 4,
     "stock": 12,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "ipad-1.jpg" }, { "imagesUrl": "ipad-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/ipad-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/ipad-2.jpg" }
+    ]
   },
 
   {
     "productName": "Samsung Galaxy S24",
     "description": "Samsung flagship phone",
     "price": 1100,
-    "mainImage": "s24-main.jpg",
+    "mainImage": "Files/Images/products/main/s24-main.jpg",
     "brandId": 2,
-    "categoryId": 6,
+    "categoryId": 1,
     "stock": 18,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "s24-1.jpg" }, { "imagesUrl": "s24-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/s24-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/s24-2.jpg" }
+    ]
   },
 
   {
     "productName": "Samsung Galaxy S23",
     "description": "Previous Samsung flagship",
     "price": 950,
-    "mainImage": "s23-main.jpg",
+    "mainImage": "Files/Images/products/main/s23-main.jpg",
     "brandId": 2,
-    "categoryId": 6,
+    "categoryId": 1,
     "stock": 6,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "s23-1.jpg" }, { "imagesUrl": "s23-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/s23-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/s23-2.jpg" }
+    ]
   },
 
   {
     "productName": "Samsung Galaxy A54",
     "description": "Mid range Samsung smartphone",
     "price": 450,
-    "mainImage": "a54-main.jpg",
+    "mainImage": "Files/Images/products/main/a54-main.jpg",
     "brandId": 2,
-    "categoryId": 6,
+    "categoryId": 1,
     "stock": 22,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "a54-1.jpg" }, { "imagesUrl": "a54-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/a54-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/a54-2.jpg" }
+    ]
   },
 
   {
     "productName": "Samsung Galaxy Tab S9",
     "description": "Samsung tablet device",
     "price": 900,
-    "mainImage": "tabs9-main.jpg",
+    "mainImage": "Files/Images/products/main/tabs9-main.jpg",
     "brandId": 2,
-    "categoryId": 9,
+    "categoryId": 4,
     "stock": 4,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "tabs9-1.jpg" },
-      { "imagesUrl": "tabs9-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/tabs9-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/tabs9-2.jpg" }
     ]
   },
 
@@ -128,14 +140,14 @@
     "productName": "Samsung Wireless Charger",
     "description": "Fast wireless charger",
     "price": 60,
-    "mainImage": "charger-main.jpg",
+    "mainImage": "Files/Images/products/main/charger-main.jpg",
     "brandId": 2,
-    "categoryId": 8,
+    "categoryId": 3,
     "stock": 30,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "charger-1.jpg" },
-      { "imagesUrl": "charger-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/charger-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/charger-2.jpg" }
     ]
   },
 
@@ -143,14 +155,14 @@
     "productName": "Dell XPS 15",
     "description": "High performance Dell laptop",
     "price": 1800,
-    "mainImage": "xps15-main.jpg",
+    "mainImage": "Files/Images/products/main/xps15-main.jpg",
     "brandId": 3,
-    "categoryId": 5,
+    "categoryId": 2,
     "stock": 10,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "xps15-1.jpg" },
-      { "imagesUrl": "xps15-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/xps15-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/xps15-2.jpg" }
     ]
   },
 
@@ -158,14 +170,14 @@
     "productName": "Dell XPS 13",
     "description": "Compact powerful laptop",
     "price": 1500,
-    "mainImage": "xps13-main.jpg",
+    "mainImage": "Files/Images/products/main/xps13-main.jpg",
     "brandId": 3,
-    "categoryId": 5,
+    "categoryId": 2,
     "stock": 7,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "xps13-1.jpg" },
-      { "imagesUrl": "xps13-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/xps13-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/xps13-2.jpg" }
     ]
   },
 
@@ -173,14 +185,14 @@
     "productName": "Dell Inspiron 14",
     "description": "Affordable Dell laptop",
     "price": 900,
-    "mainImage": "inspiron-main.jpg",
+    "mainImage": "Files/Images/products/main/inspiron-main.jpg",
     "brandId": 3,
-    "categoryId": 5,
+    "categoryId": 2,
     "stock": 3,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "inspiron-1.jpg" },
-      { "imagesUrl": "inspiron-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/inspiron-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/inspiron-2.jpg" }
     ]
   },
 
@@ -188,26 +200,29 @@
     "productName": "Dell USB Dock",
     "description": "Laptop docking station",
     "price": 120,
-    "mainImage": "dock-main.jpg",
+    "mainImage": "Files/Images/products/main/dock-main.jpg",
     "brandId": 3,
-    "categoryId": 8,
+    "categoryId": 3,
     "stock": 14,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "dock-1.jpg" }, { "imagesUrl": "dock-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/dock-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/dock-2.jpg" }
+    ]
   },
 
   {
     "productName": "Dell Wireless Mouse",
     "description": "Comfortable wireless mouse",
     "price": 35,
-    "mainImage": "mouse-main.jpg",
+    "mainImage": "Files/Images/products/main/mouse-main.jpg",
     "brandId": 3,
-    "categoryId": 8,
+    "categoryId": 3,
     "stock": 40,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "mouse-1.jpg" },
-      { "imagesUrl": "mouse-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/mouse-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/mouse-2.jpg" }
     ]
   },
 
@@ -215,14 +230,14 @@
     "productName": "Lenovo ThinkPad X1",
     "description": "Business laptop",
     "price": 1700,
-    "mainImage": "thinkpad-main.jpg",
+    "mainImage": "Files/Images/products/main/thinkpad-main.jpg",
     "brandId": 4,
-    "categoryId": 5,
+    "categoryId": 2,
     "stock": 9,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "thinkpad-1.jpg" },
-      { "imagesUrl": "thinkpad-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/thinkpad-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/thinkpad-2.jpg" }
     ]
   },
 
@@ -230,14 +245,14 @@
     "productName": "Lenovo IdeaPad 5",
     "description": "Daily use laptop",
     "price": 800,
-    "mainImage": "ideapad-main.jpg",
+    "mainImage": "Files/Images/products/main/ideapad-main.jpg",
     "brandId": 4,
-    "categoryId": 5,
+    "categoryId": 2,
     "stock": 13,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "ideapad-1.jpg" },
-      { "imagesUrl": "ideapad-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/ideapad-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/ideapad-2.jpg" }
     ]
   },
 
@@ -245,14 +260,14 @@
     "productName": "Lenovo Tab P11",
     "description": "Android tablet",
     "price": 400,
-    "mainImage": "tabp11-main.jpg",
+    "mainImage": "Files/Images/products/main/tabp11-main.jpg",
     "brandId": 4,
-    "categoryId": 9,
+    "categoryId": 4,
     "stock": 11,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "tabp11-1.jpg" },
-      { "imagesUrl": "tabp11-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/tabp11-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/tabp11-2.jpg" }
     ]
   },
 
@@ -260,14 +275,14 @@
     "productName": "Lenovo Gaming Mouse",
     "description": "RGB gaming mouse",
     "price": 50,
-    "mainImage": "gamingmouse-main.jpg",
+    "mainImage": "Files/Images/products/main/gamingmouse-main.jpg",
     "brandId": 4,
-    "categoryId": 8,
+    "categoryId": 3,
     "stock": 25,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "gamingmouse-1.jpg" },
-      { "imagesUrl": "gamingmouse-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/gamingmouse-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/gamingmouse-2.jpg" }
     ]
   },
 
@@ -275,14 +290,14 @@
     "productName": "Lenovo Headset",
     "description": "Comfortable headset",
     "price": 70,
-    "mainImage": "lenovoheadset-main.jpg",
+    "mainImage": "Files/Images/products/main/lenovoheadset-main.jpg",
     "brandId": 4,
-    "categoryId": 7,
+    "categoryId": 5,
     "stock": 6,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "lenovoheadset-1.jpg" },
-      { "imagesUrl": "lenovoheadset-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/lenovoheadset-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/lenovoheadset-2.jpg" }
     ]
   },
 
@@ -290,38 +305,44 @@
     "productName": "Sony WH-1000XM5",
     "description": "Premium noise cancelling headphones",
     "price": 399,
-    "mainImage": "xm5-main.jpg",
+    "mainImage": "Files/Images/products/main/xm5-main.jpg",
     "brandId": 5,
-    "categoryId": 7,
+    "categoryId": 5,
     "stock": 0,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "xm5-1.jpg" }, { "imagesUrl": "xm5-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/xm5-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/xm5-2.jpg" }
+    ]
   },
 
   {
     "productName": "Sony WH-1000XM4",
     "description": "High quality wireless headphones",
     "price": 320,
-    "mainImage": "xm4-main.jpg",
+    "mainImage": "Files/Images/products/main/xm4-main.jpg",
     "brandId": 5,
-    "categoryId": 7,
+    "categoryId": 5,
     "stock": 5,
     "minimumStock": 10,
-    "subImages": [{ "imagesUrl": "xm4-1.jpg" }, { "imagesUrl": "xm4-2.jpg" }]
+    "subImages": [
+      { "imagesUrl": "Files/Images/products/Sub/xm4-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/xm4-2.jpg" }
+    ]
   },
 
   {
     "productName": "Sony WF-1000XM4",
     "description": "Wireless earbuds",
     "price": 280,
-    "mainImage": "sonybuds-main.jpg",
+    "mainImage": "Files/Images/products/main/sonybuds-main.jpg",
     "brandId": 5,
-    "categoryId": 7,
+    "categoryId": 5,
     "stock": 17,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "sonybuds-1.jpg" },
-      { "imagesUrl": "sonybuds-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/sonybuds-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/sonybuds-2.jpg" }
     ]
   },
 
@@ -329,14 +350,14 @@
     "productName": "Sony Bluetooth Speaker",
     "description": "Portable speaker",
     "price": 150,
-    "mainImage": "speaker-main.jpg",
+    "mainImage": "Files/Images/products/main/speaker-main.jpg",
     "brandId": 5,
-    "categoryId": 8,
+    "categoryId": 4,
     "stock": 21,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "speaker-1.jpg" },
-      { "imagesUrl": "speaker-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/speaker-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/speaker-2.jpg" }
     ]
   },
 
@@ -344,14 +365,14 @@
     "productName": "Sony Noise Cancelling Earbuds",
     "description": "Advanced earbuds",
     "price": 260,
-    "mainImage": "earbuds-main.jpg",
+    "mainImage": "Files/Images/products/main/earbuds-main.jpg",
     "brandId": 5,
-    "categoryId": 7,
+    "categoryId": 5,
     "stock": 8,
     "minimumStock": 10,
     "subImages": [
-      { "imagesUrl": "earbuds-1.jpg" },
-      { "imagesUrl": "earbuds-2.jpg" }
+      { "imagesUrl": "Files/Images/products/Sub/earbuds-1.jpg" },
+      { "imagesUrl": "Files/Images/products/Sub/earbuds-2.jpg" }
     ]
   }
 ]
