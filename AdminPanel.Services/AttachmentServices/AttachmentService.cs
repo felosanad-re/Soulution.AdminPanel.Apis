@@ -44,7 +44,6 @@ namespace AdminPanel.Services.AttachmentServices
             var filePath = Path.Combine(Directory.GetCurrentDirectory(),
                 "wwwroot",
                 "Files",
-                "Images",
                 folderName, // represent Saved folder[products- brands...]
                 fileName);
             if (File.Exists(filePath))

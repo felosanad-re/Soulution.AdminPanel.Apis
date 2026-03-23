@@ -20,21 +20,21 @@ namespace AdminPanel.Apis.Helpers.Mapping
             CreateMap<Product, ProductToReturnDTO>()
                 .ForMember(d => d.BrandName, o => o.MapFrom(s => s.Brand!.BrandName))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category!.CategoryName))
-                .ForMember(d => d.MainImage, o => o.MapFrom<ImageUrlResolver<Product, ProductToReturnDTO>, string>(s => s.MainImage));
+                .ForMember(d => d.MainImage, o => o.MapFrom<ImageUrlResolver<Product, ProductToReturnDTO>, string>(s => $"Files/Images/Products/main/{s.MainImage}"));
 
             CreateMap<Product, CreateProductDTO>();
             CreateMap<Product, UpdateProductDTO>();
             CreateMap<ProductImages, ProductImagesDto>()
                 .ForMember(d => d.ProductName, o => o.MapFrom(s => s.Product.ProductName))
-                .ForMember(d => d.ImagesUrl, o => o.MapFrom<ImageUrlResolver<ProductImages, ProductImagesDto>, string>(s => s.ImagesUrl));
+                .ForMember(d => d.ImagesUrl, o => o.MapFrom<ImageUrlResolver<ProductImages, ProductImagesDto>, string>(s =>$"Files/Images/Products/Sub/{s.ImagesUrl}"));
 
             CreateMap<Brand, BrandToReturnDTO>()
-                .ForMember(d => d.Logo, o => o.MapFrom<ImageUrlResolver<Brand, BrandToReturnDTO>, string>(s => s.Logo));
+                .ForMember(d => d.Logo, o => o.MapFrom<ImageUrlResolver<Brand, BrandToReturnDTO>, string>(s => $"Files/Images/Brands/{s.Logo}"));
             CreateMap<Brand, CreatedBrandDTO>();
             CreateMap<Brand, UpdatedBrandDTO>();
 
             CreateMap<Category, CategoryToReturnDTO>()
-                .ForMember(d => d.Image, o => o.MapFrom<ImageUrlResolver<Category, CategoryToReturnDTO>, string> (s => s.Image));
+                .ForMember(d => d.Image, o => o.MapFrom<ImageUrlResolver<Category, CategoryToReturnDTO>, string> (s => $"Files/Images/categories/{s.Image}"));
             CreateMap<Category, CreatedCategoryDTO>();
             CreateMap<Category, UpdatedCategoryDTO>();
         }

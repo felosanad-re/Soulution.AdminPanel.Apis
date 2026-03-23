@@ -18,8 +18,8 @@ namespace AdminPanel.Core.ModelsDto.RequestDTO.Products
         public string Description { get; set; } = string.Empty;
         [Required]
         public decimal Price { get; set; }
-        public IFormFile MainImage { get; set; }
-        public List<IFormFile> SubImages { get; set; }
+        public IFormFile? MainImage { get; set; }
+        public List<IFormFile>? SubImages { get; set; }
         public List<int>? DeletedImages { get; set; }
         [Required]
         public int BrandId { get; set; }

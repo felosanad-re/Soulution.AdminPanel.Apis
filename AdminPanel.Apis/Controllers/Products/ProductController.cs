@@ -80,7 +80,7 @@ namespace AdminPanel.Apis.Controllers.Products
             if (ids.Count > 25) return BadRequest(ResultServiceApplication<ProductToReturnDTO>.Fail("You Can Only Choose 25 Product"));
             var products = await _productService.DeleteBulkAsync(ids);
             if (!products.Succeed) return BadRequest(products.Errors);
-            return Ok(products.Message);
+            return Ok(products);
         }
         #endregion
     }

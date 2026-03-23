@@ -3,12 +3,16 @@ using AdminPanel.Apis.Helpers.Mapping;
 using AdminPanel.Core.Service_Contract;
 using AdminPanel.Core.Service_Contract.AttachmentServices;
 using AdminPanel.Core.Service_Contract.AuthServices;
+using AdminPanel.Core.Service_Contract.brandsServices;
+using AdminPanel.Core.Service_Contract.CategoriesServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.UnitOfWork;
 using AdminPanel.Repositories.UnitOfWorks;
 using AdminPanel.Services;
 using AdminPanel.Services.AttachmentServices;
 using AdminPanel.Services.AuthServices;
+using AdminPanel.Services.BrandsServices;
+using AdminPanel.Services.CategoriesServices;
 using AdminPanel.Services.ProductServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -21,6 +25,8 @@ namespace AdminPanel.Apis.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration _configuration)
         {
+            services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             // Add Profile Mapping
             services.AddAutoMapper(typeof(ProfileMapping));
             // Add Product Service

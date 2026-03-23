@@ -120,8 +120,8 @@ namespace AdminPanel.Services.BrandsServices
                     {
                         await _attachmentService.DeleteImageAsync(updatedBrand.Logo, _configuration["FileSitteng:BrandImages"]!);
                     }
-                    var folderName = "Images/Brands";
-                    updatedBrand.Logo = await _attachmentService.UploadAsync(brand.Logo, folderName, allowExtentions, maxSize);
+                    var folderName = _configuration["FileSitteng:BrandImages"];
+                    updatedBrand.Logo = await _attachmentService.UploadAsync(brand.Logo, folderName!, allowExtentions!, maxSize);
                 }
                 _unitOfWork.CreateRepository<Brand>().Update(updatedBrand);
                 await _unitOfWork.CompleteAsync();

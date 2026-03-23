@@ -7,21 +7,21 @@
   {
     "brandName": "Samsung",
     "description": "Global electronics company",
-    "logo": "Images/Brands/samsung.png"
+    "logo": "Files/Images/Brands/samsung.png"
   },
   {
     "brandName": "Dell",
     "description": "Computer technology company",
-    "logo": "Images/Brands/dell.png"
+    "logo": "Files/Images/Brands/dell.png"
   },
   {
     "brandName": "Lenovo",
     "description": "Leading laptop manufacturer",
-    "logo": "Images/Brands/lenovo.png"
+    "logo": "Files/Images/Brands/lenovo.png"
   },
   {
     "brandName": "Sony",
     "description": "Electronics and audio brand",
-    "logo": "Images/Brands/sony.png"
+    "logo": "Files/Images/Brands/sony.png"
   }
 ]

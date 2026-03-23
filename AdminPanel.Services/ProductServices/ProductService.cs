@@ -138,7 +138,7 @@ namespace AdminPanel.Services.ProductServices
                 {
                     // Delete Old Image
                     await _attachmentService.DeleteImageAsync(product.MainImage, _configuration["FileSitteng:ProductMainImages"]!);
-                    var folderName = "products";
+                    var folderName = _configuration["FileSitteng:ProductMainImages"];
                     product.MainImage = await _attachmentService.UploadAsync(updatedProduct.MainImage, folderName, allowExtentions, maxSize);
                 }
                 // Edit Sub Images
