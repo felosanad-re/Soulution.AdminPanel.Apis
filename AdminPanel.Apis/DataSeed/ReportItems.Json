@@ -1,0 +1,171 @@
+[
+  {
+    "reportTransactionId": 1,
+    "productId": 1,
+    "productName": "MacBook Pro M3",
+    "price": 2200,
+    "quantity": 1,
+    "totalPrice": 2200
+  },
+  {
+    "reportTransactionId": 1,
+    "productId": 3,
+    "productName": "iPhone 15 Pro",
+    "price": 1100,
+    "quantity": 2,
+    "totalPrice": 2200
+  },
+
+  {
+    "reportTransactionId": 2,
+    "productId": 2,
+    "productName": "MacBook Air M2",
+    "price": 1400,
+    "quantity": 1,
+    "totalPrice": 1400
+  },
+  {
+    "reportTransactionId": 2,
+    "productId": 5,
+    "productName": "iPad Pro",
+    "price": 900,
+    "quantity": 1,
+    "totalPrice": 900
+  },
+
+  {
+    "reportTransactionId": 3,
+    "productId": 3,
+    "productName": "iPhone 15 Pro",
+    "price": 1100,
+    "quantity": 1,
+    "totalPrice": 1100
+  },
+  {
+    "reportTransactionId": 3,
+    "productId": 4,
+    "productName": "iPhone 14",
+    "price": 850,
+    "quantity": 2,
+    "totalPrice": 1700
+  },
+
+  {
+    "reportTransactionId": 4,
+    "productId": 6,
+    "productName": "Samsung Galaxy S24",
+    "price": 1000,
+    "quantity": 1,
+    "totalPrice": 1000
+  },
+  {
+    "reportTransactionId": 4,
+    "productId": 10,
+    "productName": "Samsung Wireless Charger",
+    "price": 70,
+    "quantity": 3,
+    "totalPrice": 210
+  },
+
+  {
+    "reportTransactionId": 5,
+    "productId": 7,
+    "productName": "Samsung Galaxy S23",
+    "price": 900,
+    "quantity": 2,
+    "totalPrice": 1800
+  },
+  {
+    "reportTransactionId": 5,
+    "productId": 8,
+    "productName": "Samsung Galaxy A54",
+    "price": 400,
+    "quantity": 1,
+    "totalPrice": 400
+  },
+
+  {
+    "reportTransactionId": 6,
+    "productId": 9,
+    "productName": "Samsung Galaxy Tab S9",
+    "price": 950,
+    "quantity": 1,
+    "totalPrice": 950
+  },
+  {
+    "reportTransactionId": 6,
+    "productId": 10,
+    "productName": "Samsung Wireless Charger",
+    "price": 70,
+    "quantity": 2,
+    "totalPrice": 140
+  },
+
+  {
+    "reportTransactionId": 7,
+    "productId": 1,
+    "productName": "MacBook Pro M3",
+    "price": 2200,
+    "quantity": 1,
+    "totalPrice": 2200
+  },
+  {
+    "reportTransactionId": 7,
+    "productId": 6,
+    "productName": "Samsung Galaxy S24",
+    "price": 1000,
+    "quantity": 1,
+    "totalPrice": 1000
+  },
+
+  {
+    "reportTransactionId": 8,
+    "productId": 2,
+    "productName": "MacBook Air M2",
+    "price": 1400,
+    "quantity": 2,
+    "totalPrice": 2800
+  },
+  {
+    "reportTransactionId": 8,
+    "productId": 3,
+    "productName": "iPhone 15 Pro",
+    "price": 1100,
+    "quantity": 1,
+    "totalPrice": 1100
+  },
+
+  {
+    "reportTransactionId": 9,
+    "productId": 4,
+    "productName": "iPhone 14",
+    "price": 850,
+    "quantity": 1,
+    "totalPrice": 850
+  },
+  {
+    "reportTransactionId": 9,
+    "productId": 5,
+    "productName": "iPad Pro",
+    "price": 900,
+    "quantity": 1,
+    "totalPrice": 900
+  },
+
+  {
+    "reportTransactionId": 10,
+    "productId": 8,
+    "productName": "Samsung Galaxy A54",
+    "price": 400,
+    "quantity": 2,
+    "totalPrice": 800
+  },
+  {
+    "reportTransactionId": 10,
+    "productId": 9,
+    "productName": "Samsung Galaxy Tab S9",
+    "price": 950,
+    "quantity": 1,
+    "totalPrice": 950
+  }
+]

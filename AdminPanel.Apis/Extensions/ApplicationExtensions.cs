@@ -6,6 +6,7 @@ using AdminPanel.Core.Service_Contract.AuthServices;
 using AdminPanel.Core.Service_Contract.brandsServices;
 using AdminPanel.Core.Service_Contract.CategoriesServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
+using AdminPanel.Core.Service_Contract.ReportServices;
 using AdminPanel.Core.UnitOfWork;
 using AdminPanel.Repositories.UnitOfWorks;
 using AdminPanel.Services;
@@ -14,6 +15,7 @@ using AdminPanel.Services.AuthServices;
 using AdminPanel.Services.BrandsServices;
 using AdminPanel.Services.CategoriesServices;
 using AdminPanel.Services.ProductServices;
+using AdminPanel.Services.ReportTransactionServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
@@ -25,7 +27,11 @@ namespace AdminPanel.Apis.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration _configuration)
         {
+            // Add Report Transaction Service
+            services.AddScoped<IReportTransactionService, ReportTransactionService>();
+            // Add Brand Service
             services.AddScoped<IBrandService, BrandService>();
+            // Add Category Service
             services.AddScoped<ICategoryService, CategoryService>();
             // Add Profile Mapping
             services.AddAutoMapper(typeof(ProfileMapping));

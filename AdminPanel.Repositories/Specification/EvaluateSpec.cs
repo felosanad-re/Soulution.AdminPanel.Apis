@@ -11,7 +11,7 @@ namespace AdminPanel.Repositories.Specification
         {
             var query = initialQuery;
             // Add Creteria 
-            if (spec.Creteria != null) query = query.Where(spec.Creteria);
+            if (spec.Criteria != null) query = query.Where(spec.Criteria);
             // Set Order By
             if(spec.OrderBy != null) query = query.OrderBy(spec.OrderBy);
             // set order by desc
@@ -22,6 +22,9 @@ namespace AdminPanel.Repositories.Specification
             if (spec.IsPagination) query = query.Skip(spec.Skip).Take(spec.Take);
             // Includes
             query = spec.Includes.Aggregate(query, (baseQuery, nextQuery) => baseQuery.Include(nextQuery));
+            // ThenIncludes
+            if (spec.IncludesString.Any())
+                query = spec.IncludesString.Aggregate(query, (baseQuery, includes) => baseQuery.Include(includes));
 
             return query;
         }

@@ -3,6 +3,7 @@ using AdminPanel.Core.Entities.Brands;
 using AdminPanel.Core.Entities.Categories;
 using AdminPanel.Core.Entities.Identity;
 using AdminPanel.Core.Entities.Products;
+using AdminPanel.Core.Entities.Reports;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -48,5 +49,6 @@ namespace AdminPanel.Repositories.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductImages> ProductImages { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ReportTransaction> ReportTransactions { get; set; }
     }
 }

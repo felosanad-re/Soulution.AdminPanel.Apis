@@ -5,8 +5,9 @@ namespace AdminPanel.Core.Specifications
 {
     public class BaseSpecifications<T> : ISpecifications<T> where T : ModelBase
     {
-        public Expression<Func<T, bool>>? Creteria { get ;set ;}
+        public Expression<Func<T, bool>>? Criteria { get ;set ;}
         public List<Expression<Func<T, object>>> Includes { get ;set ;} = new List<Expression<Func<T, object>>>();
+        public List<string> IncludesString { get; set; } = new List<string>();
         public Expression<Func<T, object>> OrderBy { get ;set ;}
         public Expression<Func<T, object>> OrderByDesc { get ;set ;}
         public bool IsTracking { get; set; } = true;
@@ -19,9 +20,9 @@ namespace AdminPanel.Core.Specifications
         {
         }
 
-        public BaseSpecifications(Expression<Func<T, bool>> creteria)
+        public BaseSpecifications(Expression<Func<T, bool>> criteria)
         {
-            Creteria = creteria;
+            Criteria = criteria;
         }
 
         // Order By

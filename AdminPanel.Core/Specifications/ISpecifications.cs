@@ -5,8 +5,9 @@ namespace AdminPanel.Core.Specifications
 {
     public interface ISpecifications<T> where T : ModelBase
     {
-        public Expression<Func<T, bool>>? Creteria { get; set; }
+        public Expression<Func<T, bool>>? Criteria { get; set; }
         public List<Expression<Func<T, object>>> Includes { get; set; }
+        public List<string> IncludesString { get; set; }
         public Expression<Func<T, object>> OrderBy { get; set; }
         public Expression<Func<T, object>> OrderByDesc { get; set; }
 
