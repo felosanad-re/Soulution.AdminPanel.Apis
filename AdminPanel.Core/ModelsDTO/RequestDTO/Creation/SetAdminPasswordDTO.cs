@@ -10,6 +10,8 @@ namespace AdminPanel.Core.ModelsDTO.RequestDTO.Creation
         public string Token { get; set; }
         [Required]
         public string Password { get; set; }
-        public string? Message { get; set; }
+        [Required]
+        [Compare("Password", ErrorMessage = "The confirm password not match with password")]
+        public string ConfirmPassword { get; set; }
     }
 }

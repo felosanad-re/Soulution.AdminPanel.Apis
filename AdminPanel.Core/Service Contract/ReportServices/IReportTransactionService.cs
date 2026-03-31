@@ -11,8 +11,6 @@ namespace AdminPanel.Core.Service_Contract.ReportServices
 
         Task<ResultServiceApplication<ReportTransactionToReturnDTO>> AddReportAsync(string userId,CreateReportDTO dTO);
 
-        Task<ResultServiceApplication<ReportTransactionToReturnDTO>> UpdateReportAsync(string userId,UpdateReportDTO dTO);
-
         Task<ResultServiceApplication<bool>> DeleteReportAsync(int id);
     }
 }

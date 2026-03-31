@@ -7,6 +7,8 @@ using AdminPanel.Core.Service_Contract.brandsServices;
 using AdminPanel.Core.Service_Contract.CategoriesServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Service_Contract.ReportServices;
+using AdminPanel.Core.Service_Contract.RolesServices;
+using AdminPanel.Core.Service_Contract.UserServices;
 using AdminPanel.Core.UnitOfWork;
 using AdminPanel.Repositories.UnitOfWorks;
 using AdminPanel.Services;
@@ -16,6 +18,8 @@ using AdminPanel.Services.BrandsServices;
 using AdminPanel.Services.CategoriesServices;
 using AdminPanel.Services.ProductServices;
 using AdminPanel.Services.ReportTransactionServices;
+using AdminPanel.Services.RolesServices;
+using AdminPanel.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +31,7 @@ namespace AdminPanel.Apis.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration _configuration)
         {
+            services.AddScoped<IRoleService, RoleService>();
             // Add Report Transaction Service
             services.AddScoped<IReportTransactionService, ReportTransactionService>();
             // Add Brand Service
@@ -45,12 +50,16 @@ namespace AdminPanel.Apis.Extensions
             services.AddScoped(typeof(IDbInitialize), typeof(DbInitialization));
             // Add Auth Services
             services.AddScoped(typeof(IAuthService), typeof(AuthService));
-
+            // Add User Service
+            services.AddScoped<IUserService, UserService>();
+            // Add Role Services
+            services.AddScoped<IRoleService, RoleService>();
             // Add Email Sender
             services.AddTransient<IEmailSender, EmailSender>();
             // Add JWT
             services.AddAuthentication(options =>
             {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>

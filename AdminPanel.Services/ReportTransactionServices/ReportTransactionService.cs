@@ -1,4 +1,5 @@
-﻿using AdminPanel.Core.Entities.Reports;
+﻿using AdminPanel.Core.Entities.Products;
+using AdminPanel.Core.Entities.Reports;
 using AdminPanel.Core.ModelsDto.RequestDTO;
 using AdminPanel.Core.ModelsDto.RequestDTO.Reports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
@@ -69,38 +70,31 @@ namespace AdminPanel.Services.ReportTransactionServices
         {
             try
             {
-                var newReport = _mapper.Map<CreateReportDTO, ReportTransaction>(dTO); // Reverse Mapping
+                var newReport = _mapper.Map<ReportTransaction>(dTO);
+                newReport.UserId = userId;
                 newReport.CreatedBy = userId;
                 newReport.CreatedAt = DateTime.UtcNow;
+                // Get items
+                foreach (var item in newReport.Items)
+                {
+                    if(item.ProductId.HasValue)
+                    {
+                        var product = await _unitOfWork.CreateRepository<Product>().GetAsync(item.ProductId.Value);
+                        if (product != null)
+                        {
+                            item.ProductId = product.Id;
+                            item.ProductName = product.ProductName;
+                            item.Price = product.Price;
+                            item.Product = product;
+                        }
+                    }
+                }
                 await _unitOfWork.CreateRepository<ReportTransaction>().AddAsync(newReport);
                 await _unitOfWork.CompleteAsync();
-                var result = _mapper.Map<ReportTransaction, ReportTransactionToReturnDTO>(newReport);
+
+                var result = _mapper.Map<ReportTransactionToReturnDTO>(newReport);
                 if (result is null) return ResultServiceApplication<ReportTransactionToReturnDTO>.Fail("Report Not Created");
                 return ResultServiceApplication<ReportTransactionToReturnDTO>.Success(result, "Report Added Succeeded");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return ResultServiceApplication<ReportTransactionToReturnDTO>.Fail("There is problem In database");
-            }
-        }
-        #endregion
-
-        #region Update Report Async
-        public async Task<ResultServiceApplication<ReportTransactionToReturnDTO>> UpdateReportAsync(string userId, UpdateReportDTO dTO)
-        {
-            try
-            {
-                var report = await _unitOfWork.CreateRepository<ReportTransaction>().GetAsync(dTO.Id);
-                if (report is null) return ResultServiceApplication<ReportTransactionToReturnDTO>.Fail("Report Not Found");
-
-                _mapper.Map(dTO, report); // Update
-                report.ModifiedBy = userId;
-                report.LastModifiedAt = DateTime.UtcNow;
-                _unitOfWork.CreateRepository<ReportTransaction>().Update(report);
-                await _unitOfWork.CompleteAsync();
-                var result = _mapper.Map<ReportTransactionToReturnDTO>(report);
-                return ResultServiceApplication<ReportTransactionToReturnDTO>.Success(result, "Report Updated Succeeded");
             }
             catch (Exception ex)
             {

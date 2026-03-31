@@ -4,6 +4,7 @@ namespace AdminPanel.Core.ModelsDto.ResponseDTO.Reports
 {
     public class ReportTransactionToReturnDTO
     {
+        public int Id { get; set; }
         public string UserName { get; set; }
         public string UserId { get; set; }
 

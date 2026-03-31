@@ -30,6 +30,7 @@ namespace AdminPanel.Apis.Controllers.Accounts
         }
         #endregion
 
+        #region Forget Password
         [HttpPost("ForgetPassword")]
         public async Task<ActionResult> ForgetPassword([FromBody] ForgetPasswordDTO request)
         {
@@ -38,8 +39,10 @@ namespace AdminPanel.Apis.Controllers.Accounts
 
             return Ok(user);
         }
+        #endregion
 
         // In Angular will received Token And userId In Query Params and send them in body
+        #region Reset Password
         [HttpPost("ResetPassword")]
         public async Task<ActionResult> ResetPassword([FromBody]ResetPasswordDTO request)
         {
@@ -47,5 +50,6 @@ namespace AdminPanel.Apis.Controllers.Accounts
             if (user == null) return BadRequest(new { Message = "Invalid User" });
             return Ok(user);
         }
+        #endregion
     }
 }

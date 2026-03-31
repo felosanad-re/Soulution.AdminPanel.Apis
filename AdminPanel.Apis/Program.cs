@@ -65,6 +65,7 @@ namespace AdminPanel.Apis
                 app.UseSwaggerUI();
             }
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseHttpsRedirection();
             app.UseCors("Angular");
 

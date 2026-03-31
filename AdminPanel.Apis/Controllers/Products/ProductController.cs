@@ -5,10 +5,12 @@ using AdminPanel.Core.ModelsDto.RequestDTO.Products;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Specifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminPanel.Apis.Controllers.Products
 {
+    [Authorize]
     public class ProductController : BaseController
     {
         #region Services

@@ -105,32 +105,6 @@ namespace AdminPanel.Services.AuthServices
         }
         #endregion
 
-        #region Set Admin Password
-        public async Task<ServiceResult> SetAdminPasswordAsync(SetAdminPasswordDTO request)
-        {
-            var user = await _userManager.FindByIdAsync(request.UserId);
-            // Check User
-            if (user is null) return new ServiceResult()
-            {
-                Succeed = false,
-                Message = "User not found"
-            };
-
-            var res = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
-            if (!res.Succeeded) return new ServiceResult()
-            { 
-                Succeed = false,
-                Message = "Password Not Set",
-                Errors = res.Errors.Select(e => e.Description)
-            };
-            return new ServiceResult()
-            {
-                Succeed = true,
-                Message = "Password Set Successful"
-            };
-        }
-        #endregion
-
         #region ForgetPasswordAsync
         public async Task<ServiceResult> ForgetPasswordAsync(ForgetPasswordDTO request)
         {
@@ -142,7 +116,7 @@ namespace AdminPanel.Services.AuthServices
             };
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             token = WebUtility.UrlEncode(token);
-            var link = $"https://localhost:4200/resetpassword?userId={user.Id}&token={token}";
+            var link = $"{_configuration["FrontEndUrl"]}/set-password?userId=d={user.Id}&token={token}";
             var message = $@"<h2>Password Reset</h2>
                 <p>We received a request to reset your password.</p>
                 <p>

@@ -25,7 +25,7 @@ namespace AdminPanel.Core.Specifications.ReportSpecifications
         {
             Includes.Add(R => R.ApplicationUser);
             Includes.Add(R => R.Items);
-            IncludesString.Add("Items.Product");
+            IncludesString.Add("Items.Product"); // then Includes Products
         }
     }
 }

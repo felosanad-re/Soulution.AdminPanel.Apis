@@ -2,11 +2,13 @@
 using AdminPanel.Core.ModelsDto.RequestDTO.Reports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
 using AdminPanel.Core.Service_Contract.ReportServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace AdminPanel.Apis.Controllers.Reports
 {
+    [Authorize]
     public class ReportController : BaseController
     {
         #region Services
@@ -48,19 +50,8 @@ namespace AdminPanel.Apis.Controllers.Reports
         }
         #endregion
 
-        #region Update Report
-        [HttpPut("EditReport")] // Put: /api/report/EditReport
-        public async Task<ActionResult<ResultServiceApplication<ReportTransactionToReturnDTO>>> Update(UpdateReportDTO dTO)
-        {
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (user is null) return Unauthorized();
-            var result = await _reportTransactionService.UpdateReportAsync(user, dTO);
-            return Ok(result);
-        }
-        #endregion
-
         #region Delete Report
-        [HttpDelete("DeleteReport/{id}")] // Delete: /api/report/deletereport/id
+        [HttpDelete("DeleteReport/{id}")] // Delete: /api/report/deleteReport/id
         public async Task<ActionResult<ResultServiceApplication<bool>>> Delete(int id)
         {
             var userName = User.FindFirstValue(ClaimTypes.Name);

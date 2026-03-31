@@ -13,7 +13,6 @@ namespace AdminPanel.Core.Service_Contract.AuthServices
         Task<string> CreateTokenAsync(ApplicationUser user, UserManager<ApplicationUser> userManager);
         Task<LoginToReturnDTO> LoginAsync(LoginDTO login);
         Task<ServiceResult> ForgetPasswordAsync(ForgetPasswordDTO request);
-        Task<ServiceResult> SetAdminPasswordAsync(SetAdminPasswordDTO request);
         Task<ServiceResult> ResetPasswordAsync(ResetPasswordDTO request);
     }
 }
