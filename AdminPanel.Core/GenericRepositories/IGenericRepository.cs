@@ -9,6 +9,7 @@ namespace AdminPanel.Core.GenericRepositories
         Task<T?> GetAsync(int id);
         Task<IReadOnlyList<T>> GetAllAsyncSpec(ISpecifications<T> spec);
         Task<T?> GetAsyncSpec(ISpecifications<T> spec);
+        Task<int> GetCountAsyncSpec(ISpecifications<T> spec);
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);

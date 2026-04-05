@@ -29,6 +29,9 @@ namespace AdminPanel.Repositories.GenericRepositories
         public async Task<T?> GetAsyncSpec(ISpecifications<T> spec)
             => await AddSpecifications(spec).FirstOrDefaultAsync();
 
+        public async Task<int> GetCountAsyncSpec(ISpecifications<T> spec)
+            => await AddSpecifications(spec).CountAsync();
+
         public async Task AddAsync(T entity)
             => await _dbContext.Set<T>().AddAsync(entity);
 

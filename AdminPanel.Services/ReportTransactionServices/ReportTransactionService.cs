@@ -82,10 +82,13 @@ namespace AdminPanel.Services.ReportTransactionServices
                         var product = await _unitOfWork.CreateRepository<Product>().GetAsync(item.ProductId.Value);
                         if (product != null)
                         {
+                            var dtoItem = dTO.Items.FirstOrDefault(x => x.ProductId == item.ProductId);
                             item.ProductId = product.Id;
                             item.ProductName = product.ProductName;
-                            item.Price = product.Price;
+                            item.Price = dtoItem.Price;
+                            product.Price = dtoItem.Price; // update product price
                             item.Product = product;
+                            _unitOfWork.CreateRepository<Product>().Update(product);
                         }
                     }
                 }

@@ -10,7 +10,7 @@ namespace AdminPanel.Repositories.Specification
         public static IQueryable<T> GetQuery(IQueryable<T> initialQuery, ISpecifications<T> spec)
         {
             var query = initialQuery;
-            // Add Creteria 
+            // Add Criteria 
             if (spec.Criteria != null) query = query.Where(spec.Criteria);
             // Set Order By
             if(spec.OrderBy != null) query = query.OrderBy(spec.OrderBy);

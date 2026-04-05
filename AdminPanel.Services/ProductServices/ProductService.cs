@@ -40,7 +40,7 @@ namespace AdminPanel.Services.ProductServices
             var products = await _unitOfWork.CreateRepository<Product>().GetAllAsyncSpec(spec);
             if (!products.Any()) return ResultServiceApplication<PaginationModel<ProductToReturnDTO>>.Fail("No Product To Show");
             var data = _mapper.Map<IReadOnlyList<ProductToReturnDTO>>(products);
-            var count = await GetProductCount();
+            var count = await GetProductCount(@params);
             var pagination = new PaginationModel<ProductToReturnDTO>(
                 @params.PageIndex,
                 @params.PageSize,
@@ -222,12 +222,12 @@ namespace AdminPanel.Services.ProductServices
         #endregion
 
         #region Get Product Count
-        public async Task<int> GetProductCount()
+        public async Task<int> GetProductCount(ProductParams @params)
         {
-            var result = await _unitOfWork.CreateRepository<Product>().GetAllAsync();
-            if (!result.Any()) return 0;
-            return result.Count;
-        } 
+            var spec = new ProductWithFilterSpec(@params);
+            var productCount = await _unitOfWork.CreateRepository<Product>().GetCountAsyncSpec(spec);
+            return productCount;
+        }
         #endregion
     }
 }

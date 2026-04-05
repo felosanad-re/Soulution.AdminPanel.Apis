@@ -54,9 +54,13 @@ namespace AdminPanel.Apis.Controllers.Reports
         [HttpDelete("DeleteReport/{id}")] // Delete: /api/report/deleteReport/id
         public async Task<ActionResult<ResultServiceApplication<bool>>> Delete(int id)
         {
-            var userName = User.FindFirstValue(ClaimTypes.Name);
+            var userName = User.FindFirstValue(ClaimTypes.GivenName);
             var result = await _reportTransactionService.DeleteReportAsync(id);
-            return Ok($"{result.Message} deleted by: {userName}");
+            return Ok(new ResultServiceApplication<bool>
+            {
+                Succeed = true,
+                Message = $"{result.Message} deleted by: {userName}"
+            });
         }
         #endregion
     }

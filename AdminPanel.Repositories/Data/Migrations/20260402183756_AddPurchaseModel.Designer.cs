@@ -4,6 +4,7 @@ using AdminPanel.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdminPanel.Repositories.Data.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    partial class AdminDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260402183756_AddPurchaseModel")]
+    partial class AddPurchaseModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Categories.Category", b =>
@@ -99,7 +102,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Identity.ApplicationUser", b =>
@@ -239,7 +242,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Products.ProductImages", b =>
@@ -278,7 +281,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages", (string)null);
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.PurchaseInvoices.PurchaseInvoice", b =>
@@ -320,7 +323,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PurchaseInvoices", (string)null);
+                    b.ToTable("PurchaseInvoices");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.PurchaseInvoices.PurchaseInvoiceItems", b =>
@@ -356,7 +359,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("PurchaseInvoiceId");
 
-                    b.ToTable("PurchaseInvoiceItems", (string)null);
+                    b.ToTable("PurchaseInvoiceItems");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Reports.ReportTransaction", b =>
@@ -391,7 +394,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportTransactions", (string)null);
+                    b.ToTable("ReportTransactions");
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Reports.ReportTransactionItem", b =>
@@ -424,7 +427,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("ReportTransactionId");
 
-                    b.ToTable("ReportTransactionItem", (string)null);
+                    b.ToTable("ReportTransactionItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

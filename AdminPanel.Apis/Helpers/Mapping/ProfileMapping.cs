@@ -3,15 +3,18 @@ using AdminPanel.Core.Entities.Brands;
 using AdminPanel.Core.Entities.Categories;
 using AdminPanel.Core.Entities.Identity;
 using AdminPanel.Core.Entities.Products;
+using AdminPanel.Core.Entities.PurchaseInvoices;
 using AdminPanel.Core.Entities.Reports;
 using AdminPanel.Core.ModelsDto.RequestDTO.Brands;
 using AdminPanel.Core.ModelsDto.RequestDTO.Categories;
 using AdminPanel.Core.ModelsDto.RequestDTO.Products;
+using AdminPanel.Core.ModelsDto.RequestDTO.Purchases;
 using AdminPanel.Core.ModelsDto.RequestDTO.Reports;
 using AdminPanel.Core.ModelsDto.RequestDTO.Roles;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Brands;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Categories;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Purchases;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Roles;
 using AdminPanel.Core.ModelsDto.ResponseDTO.User;
@@ -26,6 +29,7 @@ namespace AdminPanel.Apis.Helpers.Mapping
         public ProfileMapping()
         {
             // Start mapping
+            #region Product & Category & Brand
             CreateMap<Product, ProductToReturnDTO>()
                 .ForMember(d => d.BrandName, o => o.MapFrom(s => s.Brand!.BrandName))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category!.CategoryName))
@@ -46,8 +50,9 @@ namespace AdminPanel.Apis.Helpers.Mapping
                 .ForMember(d => d.Image, o => o.MapFrom<ImageUrlResolver<Category, CategoryToReturnDTO>, string>(s => $"Files/Images/categories/{s.Image}"));
             CreateMap<Category, CreatedCategoryDTO>();
             CreateMap<Category, UpdatedCategoryDTO>();
+            #endregion
 
-            // Report Mapping
+            #region Report Mapping
             CreateMap<ReportTransaction, ReportTransactionToReturnDTO>()
                 .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName))
                 .ForMember(d => d.UserId, o => o.MapFrom(s => s.ApplicationUser.Id))
@@ -64,13 +69,25 @@ namespace AdminPanel.Apis.Helpers.Mapping
                 .ForMember(d => d.ProductId, o => o.MapFrom(s => s.ProductId))
                 .ForMember(d => d.Price, o => o.MapFrom(s => s.Price))
                 .ForMember(d => d.ProductName, o => o.MapFrom(s => s.ProductName));
+            #endregion
 
-            // User Mapping Roles
+            #region PurchaseInvoice Mapping
+            CreateMap<PurchaseInvoice, PurchaseInvoiceToReturnDTO>()
+                .ForMember(d => d.AdminName, o => o.MapFrom(s => s.UserName))
+                .ForMember(d => d.TotalPurchase, o => o.MapFrom(s => s.TotalPurchase))
+                .ForMember(d => d.Items, o => o.MapFrom(s => s.Items));
+            CreateMap<PurchaseInvoiceItems, PurchaseInvoiceItemsToReturnDTO>();
+            CreateMap<CreatePurchaseDTO, PurchaseInvoice>();
+            CreateMap<PurchaseInvoiceItemsDTO, PurchaseInvoiceItems>();
+            #endregion
+
+            #region User Mapping Roles
             CreateMap<ApplicationUser, ApplicationUserToReturnDTO>();
             CreateMap<ApplicationUser, CreateToReturnDTO>();
             CreateMap<IdentityRole, RoleToReturnDTO>();
             CreateMap<CreatedRoleDTO, IdentityRole>();
             CreateMap<UpdatedRoleDTO, IdentityRole>();
+            #endregion
         }
     }
 }
