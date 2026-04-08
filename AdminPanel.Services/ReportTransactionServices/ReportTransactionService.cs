@@ -92,6 +92,7 @@ namespace AdminPanel.Services.ReportTransactionServices
                         }
                     }
                 }
+                newReport.GetTotalReportTransactionPrice(); // Calc Total Purchase
                 await _unitOfWork.CreateRepository<ReportTransaction>().AddAsync(newReport);
                 await _unitOfWork.CompleteAsync();
 

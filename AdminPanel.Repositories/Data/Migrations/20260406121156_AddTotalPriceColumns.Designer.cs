@@ -4,6 +4,7 @@ using AdminPanel.Repositories.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdminPanel.Repositories.Data.Migrations
 {
     [DbContext(typeof(AdminDbContext))]
-    partial class AdminDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406121156_AddTotalPriceColumns")]
+    partial class AddTotalPriceColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,7 +313,7 @@ namespace AdminPanel.Repositories.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalReportTransaction")
+                    b.Property<decimal>("TotalPurchase")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
@@ -387,7 +390,7 @@ namespace AdminPanel.Repositories.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalReportTransaction")
+                    b.Property<decimal>("TotalReportTransactionPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 

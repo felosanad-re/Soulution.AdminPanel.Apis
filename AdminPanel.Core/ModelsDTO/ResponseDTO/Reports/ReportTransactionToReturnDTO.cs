@@ -8,9 +8,10 @@ namespace AdminPanel.Core.ModelsDto.ResponseDTO.Reports
         public string UserName { get; set; }
         public string UserId { get; set; }
 
+        public string CompanyName { get; set; }
         public List<ReportTransactionItemToReturnDTO> Items { get; set; } = new List<ReportTransactionItemToReturnDTO>();
 
-        public decimal TotalReportTransactionPrice => Items.Sum(i => i.TotalPrice);
+        public decimal TotalReportTransactionPrice { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

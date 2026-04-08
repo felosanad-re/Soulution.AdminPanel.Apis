@@ -73,8 +73,8 @@ namespace AdminPanel.Apis.Helpers.Mapping
 
             #region PurchaseInvoice Mapping
             CreateMap<PurchaseInvoice, PurchaseInvoiceToReturnDTO>()
-                .ForMember(d => d.AdminName, o => o.MapFrom(s => s.UserName))
-                .ForMember(d => d.TotalPurchase, o => o.MapFrom(s => s.TotalPurchase))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.UserName))
+                .ForMember(d => d.TotalReportTransaction, o => o.MapFrom(s => s.TotalReportTransaction))
                 .ForMember(d => d.Items, o => o.MapFrom(s => s.Items));
             CreateMap<PurchaseInvoiceItems, PurchaseInvoiceItemsToReturnDTO>();
             CreateMap<CreatePurchaseDTO, PurchaseInvoice>();

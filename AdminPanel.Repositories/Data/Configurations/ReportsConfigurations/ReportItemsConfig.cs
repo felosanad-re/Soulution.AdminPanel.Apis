@@ -9,6 +9,7 @@ namespace AdminPanel.Repositories.Data.Configurations.ReportsConfigurations
         public void Configure(EntityTypeBuilder<ReportTransactionItem> builder)
         {
             builder.Property(RI => RI.Price).HasColumnType("decimal(18, 2)");
+            builder.Property(RI => RI.TotalPrice).HasColumnType("decimal(18, 2)");
         }
     }
 }

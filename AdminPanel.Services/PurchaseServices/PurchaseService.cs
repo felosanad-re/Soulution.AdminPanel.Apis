@@ -115,6 +115,7 @@ namespace AdminPanel.Services.PurchaseServices
                 return ResultServiceApplication<bool>.Fail("There is a warning in database");
             }
         }
+
         #endregion
     }
 }

@@ -4,6 +4,7 @@ using AdminPanel.Core.Specifications;
 using AdminPanel.Repositories.Data;
 using AdminPanel.Repositories.Specification;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace AdminPanel.Repositories.GenericRepositories
 {
@@ -32,6 +33,19 @@ namespace AdminPanel.Repositories.GenericRepositories
         public async Task<int> GetCountAsyncSpec(ISpecifications<T> spec)
             => await AddSpecifications(spec).CountAsync();
 
+        // New Method To Get Select Column From Table
+        public async Task<IReadOnlyList<TResult>> GetSelectedAsync<TResult>(
+            ISpecifications<T> spec,
+            Expression<Func<T, TResult>> selector)
+        {
+            var query = AddSpecifications(spec);
+
+            return await query
+                .AsNoTracking()
+                .Select(selector)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(T entity)
             => await _dbContext.Set<T>().AddAsync(entity);
 
@@ -43,7 +57,7 @@ namespace AdminPanel.Repositories.GenericRepositories
             entity.IsDeleted = true;
             _dbContext.Set<T>().Update(entity);
         }
-        
+
         private IQueryable<T> AddSpecifications(ISpecifications<T> spec)
         {
             return EvaluateSpec<T>.GetQuery(_dbContext.Set<T>(), spec);

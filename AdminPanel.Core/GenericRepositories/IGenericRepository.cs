@@ -1,5 +1,6 @@
 ﻿using AdminPanel.Core.Entities;
 using AdminPanel.Core.Specifications;
+using System.Linq.Expressions;
 
 namespace AdminPanel.Core.GenericRepositories
 {
@@ -10,6 +11,9 @@ namespace AdminPanel.Core.GenericRepositories
         Task<IReadOnlyList<T>> GetAllAsyncSpec(ISpecifications<T> spec);
         Task<T?> GetAsyncSpec(ISpecifications<T> spec);
         Task<int> GetCountAsyncSpec(ISpecifications<T> spec);
+        Task<IReadOnlyList<TResult>> GetSelectedAsync<TResult>(
+                ISpecifications<T> spec,
+                Expression<Func<T, TResult>> selector);
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);

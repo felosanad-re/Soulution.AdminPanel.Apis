@@ -43,10 +43,10 @@ namespace AdminPanel.Apis
             {
                 action.AddPolicy("Angular", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200")
+                    policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                    .AllowAnyMethod();
+                    //.AllowCredentials();
                 });
             });
             #endregion
@@ -66,8 +66,9 @@ namespace AdminPanel.Apis
             }
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseHttpsRedirection();
+
             app.UseCors("Angular");
+            app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();

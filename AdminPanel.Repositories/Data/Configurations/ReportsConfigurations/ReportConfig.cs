@@ -10,6 +10,7 @@ namespace AdminPanel.Repositories.Data.Configurations.ReportsConfigurations
         {
             builder.Property(R => R.CreatedAt).HasColumnType("datetime2(0)");
             builder.Property(R => R.LastModifiedAt).HasColumnType("datetime2(0)");
+            builder.Property(R => R.TotalReportTransaction).HasPrecision(18, 2);
             builder.HasOne(R => R.ApplicationUser)
                 .WithMany()
                 .HasForeignKey(R => R.UserId)

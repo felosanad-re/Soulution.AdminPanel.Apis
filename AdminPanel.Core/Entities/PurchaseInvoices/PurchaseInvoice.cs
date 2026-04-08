@@ -7,8 +7,7 @@
 
         // NFP[Many]
         public ICollection<PurchaseInvoiceItems> Items { get; set; } = new HashSet<PurchaseInvoiceItems>();
-        public decimal TotalPurchase { get; set; }
-        public decimal GetTotalPurchase() => TotalPurchase = Items.Sum(i => i.TotalPrice);
-
+        public decimal TotalReportTransaction { get; set; }
+        public decimal GetTotalPurchase() => TotalReportTransaction = Items.Sum(i => i.TotalPrice);
     }
 }

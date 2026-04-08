@@ -12,7 +12,10 @@ namespace AdminPanel.Core.Entities.Reports
         public string ProductName { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int Quantity { get; set; } // count of Sales
-
-        public decimal GetTotalPrice() => Price * Quantity;
+        public decimal TotalPrice { get; set; } = 0;
+        public void GetTotalPrice()
+        {
+            TotalPrice = Price * Quantity;
+        }
     }
 }

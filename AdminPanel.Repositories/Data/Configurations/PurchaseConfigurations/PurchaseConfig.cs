@@ -8,7 +8,7 @@ namespace AdminPanel.Repositories.Data.Configurations.PurchaseConfigurations
     {
         public void Configure(EntityTypeBuilder<PurchaseInvoice> builder)
         {
-            builder.Property(P => P.TotalPurchase).HasPrecision(18, 4);
+            builder.Property(P => P.TotalReportTransaction).HasPrecision(18, 4);
         }
     }
 }

@@ -5,6 +5,7 @@ using AdminPanel.Core.Service_Contract.AttachmentServices;
 using AdminPanel.Core.Service_Contract.AuthServices;
 using AdminPanel.Core.Service_Contract.brandsServices;
 using AdminPanel.Core.Service_Contract.CategoriesServices;
+using AdminPanel.Core.Service_Contract.ChartsServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Service_Contract.PurchaseServices;
 using AdminPanel.Core.Service_Contract.ReportServices;
@@ -17,6 +18,7 @@ using AdminPanel.Services.AttachmentServices;
 using AdminPanel.Services.AuthServices;
 using AdminPanel.Services.BrandsServices;
 using AdminPanel.Services.CategoriesServices;
+using AdminPanel.Services.ChartServices;
 using AdminPanel.Services.ProductServices;
 using AdminPanel.Services.PurchaseServices;
 using AdminPanel.Services.ReportTransactionServices;
@@ -33,6 +35,8 @@ namespace AdminPanel.Apis.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration _configuration)
         {
+            // Add Chart Services
+            services.AddScoped<IChartService, ChartService>();
             // Add Purchase Service
             services.AddScoped<IPurchaseService, PurchaseService>();
             // Add Role Service

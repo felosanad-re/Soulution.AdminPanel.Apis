@@ -30,7 +30,7 @@ namespace AdminPanel.Apis.Controllers.Products
         {
             var products = await _productService.GetAllAsync(@params);
             if (!products.Succeed)
-                return BadRequest(products.Errors);
+                return BadRequest(products.Message);
             return Ok(products);
         }
         #endregion
