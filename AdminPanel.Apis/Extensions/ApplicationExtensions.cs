@@ -6,6 +6,7 @@ using AdminPanel.Core.Service_Contract.AuthServices;
 using AdminPanel.Core.Service_Contract.brandsServices;
 using AdminPanel.Core.Service_Contract.CategoriesServices;
 using AdminPanel.Core.Service_Contract.ChartsServices;
+using AdminPanel.Core.Service_Contract.ExportServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Service_Contract.PurchaseServices;
 using AdminPanel.Core.Service_Contract.ReportServices;
@@ -19,6 +20,7 @@ using AdminPanel.Services.AuthServices;
 using AdminPanel.Services.BrandsServices;
 using AdminPanel.Services.CategoriesServices;
 using AdminPanel.Services.ChartServices;
+using AdminPanel.Services.ExportServices;
 using AdminPanel.Services.ProductServices;
 using AdminPanel.Services.PurchaseServices;
 using AdminPanel.Services.ReportTransactionServices;
@@ -35,6 +37,10 @@ namespace AdminPanel.Apis.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration _configuration)
         {
+            // Add Export Service
+            services.AddScoped<IExportService, ExportService>();
+            // Add Localization 
+            services.AddLocalization(o => o.ResourcesPath = "Localization");
             // Add Chart Services
             services.AddScoped<IChartService, ChartService>();
             // Add Purchase Service

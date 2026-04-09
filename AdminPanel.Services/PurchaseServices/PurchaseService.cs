@@ -115,7 +115,14 @@ namespace AdminPanel.Services.PurchaseServices
                 return ResultServiceApplication<bool>.Fail("There is a warning in database");
             }
         }
-
         #endregion
+
+        public async Task<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>> GetPurchaseExport()
+        {
+            var spec = new PurchaseSpec();
+            var data = await _unitOfWork.CreateRepository<PurchaseInvoice>().GetAllAsyncSpec(spec);
+            var result = _mapper.Map<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>>(data);
+            return result;
+        }
     }
 }

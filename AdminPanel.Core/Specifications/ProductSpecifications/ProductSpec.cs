@@ -64,5 +64,11 @@ namespace AdminPanel.Core.Specifications.ProductSpecifications
         {
             
         }
+
+        public ProductSpec()
+            :base()
+        {
+            AddIncluedes();
+        }
     }
 }

@@ -50,6 +50,16 @@ namespace AdminPanel.Apis.Helpers.Mapping
                 .ForMember(d => d.Image, o => o.MapFrom<ImageUrlResolver<Category, CategoryToReturnDTO>, string>(s => $"Files/Images/categories/{s.Image}"));
             CreateMap<Category, CreatedCategoryDTO>();
             CreateMap<Category, UpdatedCategoryDTO>();
+
+            // Export
+            CreateMap<Product, ProductExportToReturnDTO>()
+                .ForMember(dest => dest.SubImages, opt => opt.MapFrom(src =>
+                src.SubImages != null
+                    ? string.Join(" And ", src.SubImages.Select(img => img.ImagesUrl ?? img.ImagesUrl ?? ""))
+                : ""))
+                .ForMember(d => d.BrandName, o => o.MapFrom(s => s.Brand!.BrandName))
+                .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category!.CategoryName))
+                .ForMember(d => d.MainImage, o => o.MapFrom<ImageUrlResolver<Product, ProductExportToReturnDTO>, string>(s => $"Files/Images/Products/main/{s.MainImage}"));
             #endregion
 
             #region Report Mapping
@@ -69,6 +79,10 @@ namespace AdminPanel.Apis.Helpers.Mapping
                 .ForMember(d => d.ProductId, o => o.MapFrom(s => s.ProductId))
                 .ForMember(d => d.Price, o => o.MapFrom(s => s.Price))
                 .ForMember(d => d.ProductName, o => o.MapFrom(s => s.ProductName));
+
+            // For Export
+            CreateMap<ReportTransaction, ReportTransactionExportToReturnDTO>()
+                .ForMember(d => d.Items, o => o.MapFrom(s => s.Items !=null ? string.Join(" And ", s.Items.Select(x => x.ProductName)): ""));
             #endregion
 
             #region PurchaseInvoice Mapping
@@ -79,6 +93,10 @@ namespace AdminPanel.Apis.Helpers.Mapping
             CreateMap<PurchaseInvoiceItems, PurchaseInvoiceItemsToReturnDTO>();
             CreateMap<CreatePurchaseDTO, PurchaseInvoice>();
             CreateMap<PurchaseInvoiceItemsDTO, PurchaseInvoiceItems>();
+
+            // For Export
+            CreateMap<PurchaseInvoice, PurchaseInvoiceExportToReturnDTO>()
+                .ForMember(d => d.Items, o => o.MapFrom(s => s.Items != null ? string.Join(" And ", s.Items.Select(x => x.ProductName)): ""));
             #endregion
 
             #region User Mapping Roles

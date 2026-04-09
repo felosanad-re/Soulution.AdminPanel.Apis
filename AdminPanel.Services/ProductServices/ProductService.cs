@@ -229,5 +229,13 @@ namespace AdminPanel.Services.ProductServices
             return productCount;
         }
         #endregion
+
+        public async Task<IReadOnlyList<ProductExportToReturnDTO>> GetProductForExportAsync()
+        {
+            var spec = new ProductSpec();
+            var data = await _unitOfWork.CreateRepository<Product>().GetAllAsyncSpec(spec);
+            var dataMapping = _mapper.Map<IReadOnlyList<ProductExportToReturnDTO>>(data);
+            return dataMapping;
+        }
     }
 }

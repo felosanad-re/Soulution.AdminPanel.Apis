@@ -23,5 +23,7 @@ namespace AdminPanel.Core.Service_Contract.ProductServices
         // Delete Bulk Products
         Task<ResultServiceApplication<bool>> DeleteBulkAsync(List<int> productsId);
         Task<int> GetProductCount(ProductParams @params);
+
+        Task<IReadOnlyList<ProductExportToReturnDTO>> GetProductForExportAsync();
     }
 }

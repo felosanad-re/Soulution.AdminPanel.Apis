@@ -12,5 +12,7 @@ namespace AdminPanel.Core.Service_Contract.PurchaseServices
         Task<ResultServiceApplication<PurchaseInvoiceToReturnDTO>> AddPurchaseAsync(CreatePurchaseDTO dto, string userName);
 
         Task<ResultServiceApplication<bool>> Delete(int id);
+
+        Task<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>> GetPurchaseExport();
     }
 }

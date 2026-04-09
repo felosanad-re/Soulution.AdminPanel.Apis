@@ -4,6 +4,7 @@ using AdminPanel.Core.Entities.Identity;
 using AdminPanel.Repositories.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace AdminPanel.Apis
 {
@@ -16,7 +17,9 @@ namespace AdminPanel.Apis
             #region Add DI Services
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddViewLocalization() // Localization
+                .AddDataAnnotationsLocalization();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddSwaggerGen();
@@ -67,6 +70,13 @@ namespace AdminPanel.Apis
             app.UseStaticFiles();
             app.UseRouting();
 
+            // Use Localization File
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en"),
+                SupportedCultures = new[] { new CultureInfo("ar"), new CultureInfo("en") },
+                SupportedUICultures = new[] {new CultureInfo("ar"), new CultureInfo("en")}
+            });
             app.UseCors("Angular");
             app.UseHttpsRedirection();
 

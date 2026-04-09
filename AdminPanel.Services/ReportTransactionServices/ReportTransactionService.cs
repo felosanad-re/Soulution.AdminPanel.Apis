@@ -119,6 +119,17 @@ namespace AdminPanel.Services.ReportTransactionServices
             await _unitOfWork.CompleteAsync();
             return ResultServiceApplication<bool>.Success(true,"Report Deleted succeeded");
         }
+
+        #endregion
+
+        #region GetReportForExportAsync
+        public async Task<IReadOnlyList<ReportTransactionExportToReturnDTO>> GetReportForExportAsync()
+        {
+            var spec = new ReportSpec();
+            var data = await _unitOfWork.CreateRepository<ReportTransaction>().GetAllAsyncSpec(spec);
+            var mappingData = _mapper.Map<IReadOnlyList<ReportTransactionExportToReturnDTO>>(data);
+            return mappingData;
+        }
         #endregion
     }
 }
