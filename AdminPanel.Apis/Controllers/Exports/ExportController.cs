@@ -1,6 +1,4 @@
-﻿using AdminPanel.Core.Entities.Products;
-using AdminPanel.Core.Entities.Reports;
-using AdminPanel.Core.ModelsDto.RequestDTO.Exports;
+﻿using AdminPanel.Core.ModelsDto.RequestDTO.Exports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Purchases;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
@@ -8,7 +6,6 @@ using AdminPanel.Core.Service_Contract.ExportServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Service_Contract.PurchaseServices;
 using AdminPanel.Core.Service_Contract.ReportServices;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminPanel.Apis.Controllers.Exports

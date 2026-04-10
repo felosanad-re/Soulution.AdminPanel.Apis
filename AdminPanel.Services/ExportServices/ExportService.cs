@@ -33,7 +33,7 @@ namespace AdminPanel.Services.ExportServices
             //Set Headers
             for (int i = 0; i < properties.Length; i++)
             {
-                var key = properties[i].Name; // name of properties[coulumn name]
+                var key = properties[i].Name; // name of properties[column name]
                 var localization = _stringLocalizer[key]; // Get Name From Localization
                 var headerName = localization.ResourceNotFound
                     ? SplitCamelCase(key) : localization.Value;
@@ -57,6 +57,8 @@ namespace AdminPanel.Services.ExportServices
             {
                 workSheet.RightToLeft = true;
             }
+
+            // Table Style
             var headerRange = workSheet.Range(1, 1, 1, properties.Count());
             headerRange.Style.Font.Bold = true;
             headerRange.Style.Font.FontColor = XLColor.White;
@@ -64,8 +66,8 @@ namespace AdminPanel.Services.ExportServices
             headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
-            // تعديل عرض الأعمدة تلقائياً
             workSheet.Columns().AdjustToContents();
+
             using var stream = new MemoryStream();
             workBook.SaveAs(stream);
             return stream.ToArray();
