@@ -1,7 +1,9 @@
 ﻿using AdminPanel.Core.Entities.Products;
 using AdminPanel.Core.ModelsDto;
 using AdminPanel.Core.ModelsDto.RequestDTO;
+using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.RequestDTO.Products;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
 using AdminPanel.Core.Specifications;
 
@@ -25,5 +27,7 @@ namespace AdminPanel.Core.Service_Contract.ProductServices
         Task<int> GetProductCount(ProductParams @params);
 
         Task<IReadOnlyList<ProductExportToReturnDTO>> GetProductForExportAsync();
+
+        Task<ImportToReturnDTO<ProductToImport>> GetProductForImport(ImportDTO<ProductToImport> req);
     }
 }

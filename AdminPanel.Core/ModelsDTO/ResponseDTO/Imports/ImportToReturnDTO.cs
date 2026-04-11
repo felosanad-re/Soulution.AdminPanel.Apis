@@ -7,6 +7,6 @@
         public int SkippedDuplicates { get; set; }
         public List<string> Errors { get; set; }
         public string Message => $"Total Rows is {TotalRows}, Added {AddedCount} And skipped {SkippedDuplicates}";
-        public IReadOnlyList<T> Data { get; set; }
+        public List<T> Data { get; set; } = new List<T>();
     }
 }

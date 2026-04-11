@@ -49,6 +49,9 @@ namespace AdminPanel.Repositories.GenericRepositories
         public async Task AddAsync(T entity)
             => await _dbContext.Set<T>().AddAsync(entity);
 
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+            => await _dbContext.AddRangeAsync(entities);
+
         public void Update(T entity)
             => _dbContext.Set<T>().Update(entity);
 

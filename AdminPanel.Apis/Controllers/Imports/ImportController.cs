@@ -32,37 +32,10 @@ namespace AdminPanel.Apis.Controllers.Imports
 
         #region Import Products
         [HttpPost("Products")] // Post: /api/Import/Products
-        public async Task<ActionResult<ImportToReturnDTO<ProductToImport>>> ImportProducts([FromForm] ImportDTO<Product> request)
+        public async Task<ActionResult<ImportToReturnDTO<ProductToImport>>> ImportProducts([FromForm] ImportDTO<ProductToImport> request)
         {
-            if (request.File == null || request.File.Length == 0)
-            {
-                return BadRequest(new ImportToReturnDTO<ProductToImport>
-                {
-                    Errors = new List<string> { "Excel File is required" }
-                });
-            }
-            var products = await _productService.GetAllAsync(new ProductParams());
-            var data = await _importService.ExcelImportAsync<Product>(request);
-            var result = data.Data.Select(x =>
-            {
-                var product = products.Data.Data.FirstOrDefault(p => p.Id == x.Id);
-                return new ProductToImport
-                {
-                    Id = x.Id,
-                    BrandId = x.BrandId.Value,
-                    CategoryId = x.CategoryId.Value,
-                    Description = x.Description,
-                    MainImage = x.MainImage,
-                    SubImages = x.SubImages != null ? string.Join(" And ", x.SubImages.Select(p => p.ImagesUrl)): "",
-                    Price = x.Price,
-                    Stock = x.Stock,
-                    ProductName = x.ProductName,
-                    Type = x.Type.ToString(),
-                    BrandName =x.Brand.BrandName,
-                    CategoryName = x.Category.CategoryName
-                };
-            });
-            return Ok(result);
+            var productToImport = await _productService.GetProductForImport(request);
+            return Ok(productToImport);
         }
         #endregion
 

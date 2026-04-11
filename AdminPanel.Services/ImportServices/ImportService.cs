@@ -46,6 +46,7 @@ namespace AdminPanel.Services.ImportServices
                 }
                 dtos.Add(dto);
             }
+            result.Data = dtos;
             result.TotalRows = dtos.Count;
             return result;
         }

@@ -1,9 +1,12 @@
 ﻿using AdminPanel.Core.Entities.Products;
 using AdminPanel.Core.ModelsDto;
 using AdminPanel.Core.ModelsDto.RequestDTO;
+using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.RequestDTO.Products;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
 using AdminPanel.Core.Service_Contract.AttachmentServices;
+using AdminPanel.Core.Service_Contract.ImportServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Specifications;
 using AdminPanel.Core.Specifications.ProductSpecifications;
@@ -19,17 +22,19 @@ namespace AdminPanel.Services.ProductServices
         #region Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAttachmentService _attachmentService;
+        private readonly IServiceImport _serviceImport;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductService> _logger;
         private readonly IConfiguration _configuration;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ProductService> logger, IAttachmentService attachmentService, IConfiguration configuration)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ProductService> logger, IAttachmentService attachmentService, IConfiguration configuration, IServiceImport serviceImport)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _attachmentService = attachmentService;
             _configuration = configuration;
+            _serviceImport = serviceImport;
         }
         #endregion
 
@@ -230,6 +235,7 @@ namespace AdminPanel.Services.ProductServices
         }
         #endregion
 
+        #region GetProductForExportAsync
         public async Task<IReadOnlyList<ProductExportToReturnDTO>> GetProductForExportAsync()
         {
             var spec = new ProductSpec();
@@ -237,5 +243,88 @@ namespace AdminPanel.Services.ProductServices
             var dataMapping = _mapper.Map<IReadOnlyList<ProductExportToReturnDTO>>(data);
             return dataMapping;
         }
+        #endregion
+
+        #region GetProductForImport
+        public async Task<ImportToReturnDTO<ProductToImport>> GetProductForImport(ImportDTO<ProductToImport> req)
+        {
+            // Get Product in file
+            var productImport = await _serviceImport.ExcelImportAsync(req);
+
+            // Get Rows
+            var excelRows = productImport.Data;
+
+            var productToSave = new List<Product>(); // To Save In DB
+            var importProduct = new List<ProductToImport>(); // To Return
+            var productRepo = _unitOfWork.CreateRepository<Product>();
+            // Unique Column
+            var exsistProductsId = excelRows
+                .Where(x => x.Id > 0)
+                .Select(r => r.Id)
+                .Distinct()
+                .ToList();
+            var exsistProducts = new List<Product>();
+            if (exsistProductsId.Any())
+            {
+                var spec = new ProductSpec(exsistProductsId);
+                var readOnlyList = await productRepo.GetAllAsyncSpec(spec);
+                exsistProducts = readOnlyList.ToList(); // Convert From ReadOnlyList To List
+            }
+            var exsistingDigit = exsistProducts.ToDictionary(p => p.Id); // Set ProductId In Dictionary
+
+            foreach (var row in excelRows)
+            {
+                // Update for data
+                if(row.Id > 0 && exsistingDigit.TryGetValue(row.Id, out var existing))
+                {
+                    _mapper.Map(row, existing); // Update Mapping
+                    if(row.SubImages.Any()  == true)
+                    {
+                        existing.SubImages.Clear(); // Delete Images
+                        var newImages = row.SubImages
+                            .Select(url => new ProductImages
+                            {
+                                Product = existing,
+                                ImagesUrl = url.ToString() ?? string.Empty,
+                            }).ToList();
+                        foreach (var image in newImages)
+                        {
+                            existing.SubImages.Add(image);
+                        }
+                    }
+                    importProduct.Add(row);
+                }
+                // Add Products
+                else
+                {
+                    var newProducts = _mapper.Map<Product>(row);
+                    if(row.SubImages.Any())
+                    {
+                        newProducts.SubImages = row.SubImages.Select(url => new ProductImages
+                        {
+                            Product = newProducts,
+                            ImagesUrl = url.ToString(),
+                        }).ToList();
+                    }
+                    productToSave.Add(newProducts);
+                    importProduct.Add(row);
+                }
+            }
+
+            // Save Changes
+            if (productToSave.Any())
+            {
+                await productRepo.AddRangeAsync(productToSave);
+            }
+
+            await _unitOfWork.CompleteAsync();
+            return new ImportToReturnDTO<ProductToImport>
+            {
+                Data = importProduct,
+                TotalRows = excelRows.Count,
+                Errors = new List<string>()
+            };
+        }
+        #endregion
     }
 }

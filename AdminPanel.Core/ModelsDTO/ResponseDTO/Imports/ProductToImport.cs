@@ -1,11 +1,4 @@
-﻿using AdminPanel.Core.ModelsDto.RequestDTO.Products;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdminPanel.Core.ModelsDto.ResponseDTO.Imports
+﻿namespace AdminPanel.Core.ModelsDto.ResponseDTO.Imports
 {
     public class ProductToImport
     {

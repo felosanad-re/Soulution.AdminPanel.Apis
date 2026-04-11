@@ -13,6 +13,7 @@ using AdminPanel.Core.ModelsDto.RequestDTO.Reports;
 using AdminPanel.Core.ModelsDto.RequestDTO.Roles;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Brands;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Categories;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Products;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Purchases;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
@@ -60,6 +61,9 @@ namespace AdminPanel.Apis.Helpers.Mapping
                 .ForMember(d => d.BrandName, o => o.MapFrom(s => s.Brand!.BrandName))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category!.CategoryName))
                 .ForMember(d => d.MainImage, o => o.MapFrom<ImageUrlResolver<Product, ProductExportToReturnDTO>, string>(s => $"Files/Images/Products/main/{s.MainImage}"));
+
+            // Import 
+            CreateMap<ProductToImport, Product>();
             #endregion
 
             #region Report Mapping
