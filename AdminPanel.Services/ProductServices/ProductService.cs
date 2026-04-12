@@ -274,18 +274,21 @@ namespace AdminPanel.Services.ProductServices
 
             foreach (var row in excelRows)
             {
+                // Excel stores sub-images as one text cell, so split it before creating ProductImages rows.
+                var subImageUrls = SplitImageUrls(row.SubImages);
+
                 // Update for data
                 if(row.Id > 0 && exsistingDigit.TryGetValue(row.Id, out var existing))
                 {
                     _mapper.Map(row, existing); // Update Mapping
-                    if(row.SubImages.Any()  == true)
+                    if (subImageUrls.Any())
                     {
                         existing.SubImages.Clear(); // Delete Images
-                        var newImages = row.SubImages
+                        var newImages = subImageUrls
                             .Select(url => new ProductImages
                             {
                                 Product = existing,
-                                ImagesUrl = url.ToString() ?? string.Empty,
+                                ImagesUrl = url,
                             }).ToList();
                         foreach (var image in newImages)
                         {
@@ -298,12 +301,12 @@ namespace AdminPanel.Services.ProductServices
                 else
                 {
                     var newProducts = _mapper.Map<Product>(row);
-                    if(row.SubImages.Any())
+                    if (subImageUrls.Any())
                     {
-                        newProducts.SubImages = row.SubImages.Select(url => new ProductImages
+                        newProducts.SubImages = subImageUrls.Select(url => new ProductImages
                         {
                             Product = newProducts,
-                            ImagesUrl = url.ToString(),
+                            ImagesUrl = url,
                         }).ToList();
                     }
                     productToSave.Add(newProducts);
@@ -324,6 +327,21 @@ namespace AdminPanel.Services.ProductServices
                 TotalRows = excelRows.Count,
                 Errors = new List<string>()
             };
+        }
+
+        private static List<string> SplitImageUrls(string? subImages)
+        {
+            if (string.IsNullOrWhiteSpace(subImages))
+            {
+                return new List<string>();
+            }
+
+            // Support the same separators used by exported sheets or manual Excel edits.
+            return subImages
+                .Split(new[] { " And ", ",", ";", "|" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(url => !string.IsNullOrWhiteSpace(url))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
         #endregion
     }
