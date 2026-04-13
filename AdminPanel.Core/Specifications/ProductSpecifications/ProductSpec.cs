@@ -18,7 +18,25 @@ namespace AdminPanel.Core.Specifications.ProductSpecifications
 
             AddSorting(@params);
         }
+        public ProductSpec(int id)
+            : base(P => P.Id == id)
+        {
+            Includes.Add(P => P.Brand!);
+            Includes.Add(P => P.Category!);
+            Includes.Add(P => P.SubImages);
+        }
 
+        public ProductSpec(IEnumerable<int> productsId)
+            : base(P => productsId.Contains(P.Id))
+        {
+            AddIncluedes();
+        }
+
+        public ProductSpec()
+            : base()
+        {
+            AddIncluedes();
+        }
         private void AddSorting(ProductParams @params)
         {
             if (!string.IsNullOrEmpty(@params.Sort))
@@ -51,24 +69,5 @@ namespace AdminPanel.Core.Specifications.ProductSpecifications
             Includes.Add(P => P.SubImages);
         }
 
-        public ProductSpec(int id)
-            : base(P => P.Id == id)
-        {
-            Includes.Add(P => P.Brand!);
-            Includes.Add(P => P.Category!);
-            Includes.Add(P => P.SubImages);
-        }
-
-        public ProductSpec(IEnumerable<int> productsId)
-            :base(P => productsId.Contains(P.Id))
-        {
-            
-        }
-
-        public ProductSpec()
-            :base()
-        {
-            AddIncluedes();
-        }
     }
 }

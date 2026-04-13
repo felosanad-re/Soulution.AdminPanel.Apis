@@ -60,10 +60,15 @@ namespace AdminPanel.Apis.Helpers.Mapping
                 : ""))
                 .ForMember(d => d.BrandName, o => o.MapFrom(s => s.Brand!.BrandName))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category!.CategoryName))
-                .ForMember(d => d.MainImage, o => o.MapFrom<ImageUrlResolver<Product, ProductExportToReturnDTO>, string>(s => $"Files/Images/Products/main/{s.MainImage}"));
+                .ForMember(d => d.MainImage, o => o.MapFrom(s => s.MainImage));
 
             // Import 
-            CreateMap<ProductToImport, Product>();
+            CreateMap<ProductToImport, Product>()
+                .ForMember(d => d.SubImages, o => o.Ignore())
+                .ForMember(d => d.BrandId, o => o.MapFrom(s => s.BrandId))
+                .ForMember(d => d.CategoryId, o => o.MapFrom(s => s.CategoryId))
+                .ForMember(d => d.Brand, o => o.Ignore())
+                .ForMember(d => d.Category, o => o.Ignore());
             #endregion
 
             #region Report Mapping
