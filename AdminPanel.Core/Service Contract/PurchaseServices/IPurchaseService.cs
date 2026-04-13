@@ -1,5 +1,7 @@
 ﻿using AdminPanel.Core.ModelsDto.RequestDTO;
+using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.RequestDTO.Purchases;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Purchases;
 
 namespace AdminPanel.Core.Service_Contract.PurchaseServices
@@ -14,5 +16,6 @@ namespace AdminPanel.Core.Service_Contract.PurchaseServices
         Task<ResultServiceApplication<bool>> Delete(int id);
 
         Task<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>> GetPurchaseExport();
+        Task<ImportToReturnDTO<PurchaseInvoiceToImport>> GetPurchaseForImportAsync(ImportDTO<PurchaseInvoiceToImport> req);
     }
 }

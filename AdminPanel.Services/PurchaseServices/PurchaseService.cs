@@ -1,8 +1,11 @@
 ﻿using AdminPanel.Core.Entities.Products;
 using AdminPanel.Core.Entities.PurchaseInvoices;
 using AdminPanel.Core.ModelsDto.RequestDTO;
+using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.RequestDTO.Purchases;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Purchases;
+using AdminPanel.Core.Service_Contract.ImportServices;
 using AdminPanel.Core.Service_Contract.PurchaseServices;
 using AdminPanel.Core.Specifications.PurchaseSpecifications;
 using AdminPanel.Core.UnitOfWork;
@@ -17,11 +20,13 @@ namespace AdminPanel.Services.PurchaseServices
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IMapper _mapper;
         protected readonly ILogger<PurchaseService> _logger;
-        public PurchaseService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<PurchaseService> logger)
+        protected readonly IServiceImport _serviceImport;
+        public PurchaseService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<PurchaseService> logger, IServiceImport serviceImport)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _serviceImport = serviceImport;
         }
         #endregion
 
@@ -117,6 +122,7 @@ namespace AdminPanel.Services.PurchaseServices
         }
         #endregion
 
+        #region GetPurchaseExport
         public async Task<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>> GetPurchaseExport()
         {
             var spec = new PurchaseSpec();
@@ -124,5 +130,49 @@ namespace AdminPanel.Services.PurchaseServices
             var result = _mapper.Map<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>>(data);
             return result;
         }
+        #endregion
+
+        #region GetPurchaseForImportAsync
+        public async Task<ImportToReturnDTO<PurchaseInvoiceToImport>> GetPurchaseForImportAsync(ImportDTO<PurchaseInvoiceToImport> req)
+        {
+            // Parse purchase rows from Excel using the same shared import service.
+            var importedRows = await _serviceImport.ExcelImportAsync(req);
+
+            var purchaseRepo = _unitOfWork.CreateRepository<PurchaseInvoice>();
+            var importedPurchaseIds = importedRows.Data
+                .Where(row => row.Id > 0)
+                .Select(row => row.Id)
+                .Distinct()
+                .ToList();
+
+            var existingPurchaseIds = new HashSet<int>();
+            if (importedPurchaseIds.Any())
+            {
+                var existingPurchases = await purchaseRepo.GetAllAsyncSpec(new PurchaseSpec(importedPurchaseIds));
+                existingPurchaseIds = existingPurchases
+                    .Select(purchase => purchase.Id)
+                    .ToHashSet();
+            }
+
+            var newRows = importedRows.Data
+                .Where(row => row.Id <= 0 || !existingPurchaseIds.Contains(row.Id))
+                .ToList();
+
+            var errors = importedRows.Errors ?? new List<string>();
+            var skippedPurchasesCount = importedRows.Data.Count - newRows.Count;
+            if (skippedPurchasesCount > 0)
+            {
+                errors.Add($"{skippedPurchasesCount} existing sales report(s) were skipped during import.");
+            }
+
+            // Return parsed purchase rows directly because the Items column is stored as text in the sheet.
+            return new ImportToReturnDTO<PurchaseInvoiceToImport>
+            {
+                Data = newRows,
+                TotalRows = newRows.Count,
+                Errors = errors
+            };
+        }
+        #endregion
     }
 }

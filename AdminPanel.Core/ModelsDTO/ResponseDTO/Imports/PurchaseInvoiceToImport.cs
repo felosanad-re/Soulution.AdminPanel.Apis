@@ -4,6 +4,7 @@ namespace AdminPanel.Core.ModelsDto.ResponseDTO.Imports
 {
     public class PurchaseInvoiceToImport
     {
+        // Header names here should match the exported Excel columns so generic import can bind them automatically.
         [Column("Id")]
         public int Id { get; set; }
 

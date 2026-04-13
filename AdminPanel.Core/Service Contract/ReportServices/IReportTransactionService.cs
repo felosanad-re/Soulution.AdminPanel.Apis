@@ -1,5 +1,7 @@
 ﻿using AdminPanel.Core.ModelsDto.RequestDTO;
+using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.RequestDTO.Reports;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
 
 namespace AdminPanel.Core.Service_Contract.ReportServices
@@ -14,5 +16,6 @@ namespace AdminPanel.Core.Service_Contract.ReportServices
         Task<ResultServiceApplication<bool>> DeleteReportAsync(int id);
 
         Task<IReadOnlyList<ReportTransactionExportToReturnDTO>> GetReportForExportAsync();
+        Task<ImportToReturnDTO<BuyerToReturnRow>> GetReportForImportAsync(ImportDTO<ReportTransactionToImport> req);
     }
 }

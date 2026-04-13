@@ -1,30 +1,21 @@
-﻿using AdminPanel.Core.Entities.Products;
-using AdminPanel.Core.Entities.PurchaseInvoices;
-using AdminPanel.Core.Entities.Reports;
-using AdminPanel.Core.ModelsDto.RequestDTO.Import;
+﻿using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
-using AdminPanel.Core.Service_Contract.ImportServices;
 using AdminPanel.Core.Service_Contract.ProductServices;
 using AdminPanel.Core.Service_Contract.PurchaseServices;
 using AdminPanel.Core.Service_Contract.ReportServices;
-using AdminPanel.Core.Specifications;
-using Azure.Core;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminPanel.Apis.Controllers.Imports
 {
     public class ImportController : BaseController
     {
-        protected readonly IServiceImport _importService;
         protected readonly IReportTransactionService _reportService;
         protected readonly IProductService _productService;
         protected readonly IPurchaseService _purchaseService;
 
-        public ImportController(IServiceImport importService, IReportTransactionService reportService, IProductService productService, IPurchaseService purchaseService)
+        public ImportController(IReportTransactionService reportService, IProductService productService, IPurchaseService purchaseService)
         {
-            _importService = importService;
             _reportService = reportService;
             _productService = productService;
             _purchaseService = purchaseService;
@@ -40,50 +31,38 @@ namespace AdminPanel.Apis.Controllers.Imports
         #endregion
 
         #region Import Purchase
-        //[HttpPost("Purchase")] // Post: /api/Import/Purchase
-        //public async Task<ActionResult<ImportToReturnDTO>> ImportPurchase(ImportDTO<PurchaseInvoice> req)
-        //{
-        //    if (req?.File == null || req.File.Length == 0)
-        //    {
-        //        return BadRequest(new ImportToReturnDTO
-        //        {
-        //            Errors = new List<string> { "Excel File is required" }
-        //        });
-        //    }
-        //    var data = await _importService.ExcelImportAsync<PurchaseInvoice>(req);
-        //    if (data is null) return BadRequest(data);
-        //    return Ok(data);
-        //}
+        [HttpPost("Purchase")] // Post: /api/Import/Purchase
+        public async Task<ActionResult<ImportToReturnDTO<PurchaseInvoiceToImport>>> ImportPurchase([FromForm] ImportDTO<PurchaseInvoiceToImport> req)
+        {
+            if (req?.File == null || req.File.Length == 0)
+            {
+                return BadRequest(new ImportToReturnDTO<PurchaseInvoiceToImport>
+                {
+                    Errors = new List<string> { "Excel File is required" }
+                });
+            }
+
+            // Keep the controller thin and let the purchase service own the import flow.
+            var data = await _purchaseService.GetPurchaseForImportAsync(req);
+            return Ok(data);
+        }
         #endregion
 
         #region Import Buyer
         [HttpPost("Buyer")] // Post: /api/Import/Buyer
-        public async Task<ActionResult<ImportToReturnDTO<BuyerToReturnRow>>> ImportBuyer([FromForm]ImportDTO<ReportTransaction> req)
+        public async Task<ActionResult<ImportToReturnDTO<BuyerToReturnRow>>> ImportBuyer([FromForm] ImportDTO<ReportTransactionToImport> req)
         {
-            if(req.File == null || req.File.Length == 0)
+            if (req.File == null || req.File.Length == 0)
             {
                 return BadRequest(new ImportToReturnDTO<BuyerToReturnRow>
                 {
                     Errors = new List<string> { "Excel File is required" }
                 });
             }
-            var allBuyers = await _reportService.GetAllAsync();
-            if (!allBuyers.Succeed) return BadRequest();
-            var data = await _importService.ExcelImportAsync<ReportTransaction>(req);
-            var result = data.Data.Select(x =>
-            {
-                var report = allBuyers.Data.FirstOrDefault(r => r.Id == x.Id);
-                return new BuyerToReturnRow
-                {
-                    Id = x.Id,
-                    TotalReportTransactionPrice = x.TotalReportTransaction,
-                    UserName = x.UserId,
-                    Items = x.Items != null ? (string.Join(" And ", report?.Items.Select(i => i.ProductName))) : ""
-                };
-            });
-            if (data is null) return BadRequest();
 
-            return Ok(result);
+            // Let the report service read the sheet and shape the response rows.
+            var data = await _reportService.GetReportForImportAsync(req);
+            return Ok(data);
         }
         #endregion
     }

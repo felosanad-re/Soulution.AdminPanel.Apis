@@ -21,6 +21,12 @@ namespace AdminPanel.Core.Specifications.ReportSpecifications
             AddIncludes();
         }
 
+        public ReportSpec(IEnumerable<int> reportIds)
+            : base(R => reportIds.Contains(R.Id))
+        {
+            AddIncludes();
+        }
+
         private void AddIncludes()
         {
             Includes.Add(R => R.ApplicationUser);

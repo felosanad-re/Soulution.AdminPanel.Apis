@@ -1,8 +1,11 @@
 ﻿using AdminPanel.Core.Entities.Products;
 using AdminPanel.Core.Entities.Reports;
 using AdminPanel.Core.ModelsDto.RequestDTO;
+using AdminPanel.Core.ModelsDto.RequestDTO.Import;
 using AdminPanel.Core.ModelsDto.RequestDTO.Reports;
+using AdminPanel.Core.ModelsDto.ResponseDTO.Imports;
 using AdminPanel.Core.ModelsDto.ResponseDTO.Reports;
+using AdminPanel.Core.Service_Contract.ImportServices;
 using AdminPanel.Core.Service_Contract.ReportServices;
 using AdminPanel.Core.Specifications.ReportSpecifications;
 using AdminPanel.Core.UnitOfWork;
@@ -17,12 +20,14 @@ namespace AdminPanel.Services.ReportTransactionServices
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IMapper _mapper;
         protected readonly ILogger<ReportTransactionService> _logger;
+        protected readonly IServiceImport _serviceImport;
 
-        public ReportTransactionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ReportTransactionService> logger)
+        public ReportTransactionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ReportTransactionService> logger, IServiceImport serviceImport)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _serviceImport = serviceImport;
         }
         #endregion
 
@@ -129,6 +134,64 @@ namespace AdminPanel.Services.ReportTransactionServices
             var data = await _unitOfWork.CreateRepository<ReportTransaction>().GetAllAsyncSpec(spec);
             var mappingData = _mapper.Map<IReadOnlyList<ReportTransactionExportToReturnDTO>>(data);
             return mappingData;
+        }
+        #endregion
+
+        #region GetReportForImportAsync
+        public async Task<ImportToReturnDTO<BuyerToReturnRow>> GetReportForImportAsync(ImportDTO<ReportTransactionToImport> req)
+        {
+            // Read report rows from Excel using the shared generic import logic.
+            var importedRows = await _serviceImport.ExcelImportAsync(req);
+
+            var reportRepo = _unitOfWork.CreateRepository<ReportTransaction>();
+            var importedReportIds = importedRows.Data
+                .Where(row => row.Id > 0)
+                .Select(row => row.Id)
+                .Distinct()
+                .ToList();
+
+            var existingReportIds = new HashSet<int>();
+            if (importedReportIds.Any())
+            {
+                var existingReports = await reportRepo.GetAllAsyncSpec(new ReportSpec(importedReportIds));
+                existingReportIds = existingReports
+                    .Select(report => report.Id)
+                    .ToHashSet();
+            }
+
+            var newRows = importedRows.Data
+                .Where(row => row.Id <= 0 || !existingReportIds.Contains(row.Id))
+                .ToList();
+
+            // Shape the imported data exactly like the response expected by the Buyer import endpoint.
+            var resultRows = newRows.Select(row => new BuyerToReturnRow
+            {
+                Id = row.Id,
+                UserName = row.UserName,
+                UserId = row.UserId,
+                CompanyName = row.CompanyName,
+                Items = row.Items,
+                TotalReportTransactionPrice = row.TotalReportTransactionPrice,
+                IsDeleted = row.IsDeleted,
+                CreatedAt = row.CreatedAt,
+                LastModifiedAt = row.LastModifiedAt,
+                CreatedBy = row.CreatedBy,
+                ModifiedBy = row.ModifiedBy
+            }).ToList();
+
+            var errors = importedRows.Errors ?? new List<string>();
+            var skippedReportsCount = importedRows.Data.Count - newRows.Count;
+            if (skippedReportsCount > 0)
+            {
+                errors.Add($"{skippedReportsCount} existing report(s) were skipped during import.");
+            }
+
+            return new ImportToReturnDTO<BuyerToReturnRow>
+            {
+                Data = resultRows,
+                TotalRows = resultRows.Count,
+                Errors = errors
+            };
         }
         #endregion
     }

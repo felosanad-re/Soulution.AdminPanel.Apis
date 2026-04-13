@@ -20,5 +20,11 @@ namespace AdminPanel.Core.Specifications.PurchaseSpecifications
         {
             Includes.Add(P => P.Items);
         }
+
+        public PurchaseSpec(IEnumerable<int> purchaseIds)
+            : base(p => purchaseIds.Contains(p.Id))
+        {
+            Includes.Add(P => P.Items);
+        }
     }
 }
