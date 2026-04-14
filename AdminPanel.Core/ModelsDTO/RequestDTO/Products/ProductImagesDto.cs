@@ -10,7 +10,7 @@ namespace AdminPanel.Core.ModelsDto.RequestDTO.Products
     public class ProductImagesDto
     {
         public int ProductId { get; set; }
-        public string ProductName { get; set; } = null!;
-        public string ImagesUrl { get; set; } = string.Empty;
+        public string ProductName { get; set; } = string.Empty;
+        public string? ImagesUrl { get; set; }
     }
 }

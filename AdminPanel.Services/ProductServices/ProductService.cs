@@ -281,6 +281,11 @@ namespace AdminPanel.Services.ProductServices
                 if(row.Id > 0 && exsistingDigit.TryGetValue(row.Id, out var existing))
                 {
                     _mapper.Map(row, existing); // Update Mapping
+                    if (existing.SubImages == null)
+                    {
+                        existing.SubImages = new List<ProductImages>();
+                    }
+
                     if (subImageUrls.Any())
                     {
                         existing.SubImages.Clear(); // Delete Images

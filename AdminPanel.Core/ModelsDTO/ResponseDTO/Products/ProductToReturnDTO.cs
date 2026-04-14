@@ -11,7 +11,7 @@ namespace AdminPanel.Core.ModelsDto.ResponseDTO.Products
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string MainImage { get; set; } = string.Empty;
-        public List<ProductImagesDto> SubImages { get; set; } = new List<ProductImagesDto>();
+        public List<ProductImagesDto>? SubImages { get; set; }
         public int BrandId { get; set; }
         public int CategoryId { get; set; }
         public string BrandName { get; set; } = string.Empty;

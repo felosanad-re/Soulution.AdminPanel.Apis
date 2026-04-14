@@ -11,7 +11,7 @@ namespace AdminPanel.Core.ModelsDto.ResponseDTO.Reports
         public string CompanyName { get; set; }
         public List<ReportTransactionItemToReturnDTO> Items { get; set; } = new List<ReportTransactionItemToReturnDTO>();
 
-        public decimal TotalReportTransactionPrice { get; set; }
+        public decimal TotalReportTransaction { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

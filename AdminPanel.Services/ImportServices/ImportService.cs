@@ -129,15 +129,33 @@ namespace AdminPanel.Services.ImportServices
 
         private static bool TryResolveColumnNumber(string columnKey, Dictionary<string, int> headerMap, out int columnNumber)
         {
+
             if (headerMap.TryGetValue(columnKey, out columnNumber))
             {
                 return true;
             }
+            var normalizedKey = columnKey.Replace(" ", "").ToLowerInvariant();
+            var fuzzyMatch = headerMap.FirstOrDefault(h =>
+                h.Key.Replace(" ", "").ToLowerInvariant() == normalizedKey);
 
-            if (columnKey.All(char.IsLetter))
+            if (!string.IsNullOrEmpty(fuzzyMatch.Key))
             {
-                columnNumber = XLHelper.GetColumnNumberFromLetter(columnKey);
+                columnNumber = fuzzyMatch.Value;
                 return true;
+            }
+
+            if (columnKey.Length <= 3 && columnKey.All(char.IsLetter))
+            {
+                try
+                {
+                    columnNumber = XLHelper.GetColumnNumberFromLetter(columnKey);
+                    if (columnNumber > 0)
+                        return true;
+                }
+                catch
+                {
+                    
+                }
             }
 
             columnNumber = 0;

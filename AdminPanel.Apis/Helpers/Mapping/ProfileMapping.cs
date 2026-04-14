@@ -56,7 +56,9 @@ namespace AdminPanel.Apis.Helpers.Mapping
             CreateMap<Product, ProductExportToReturnDTO>()
                 .ForMember(dest => dest.SubImages, opt => opt.MapFrom(src =>
                 src.SubImages != null
-                    ? string.Join(" And ", src.SubImages.Select(img => img.ImagesUrl ?? img.ImagesUrl ?? ""))
+                    ? string.Join(" And ", src.SubImages
+                        .Where(img => !string.IsNullOrWhiteSpace(img.ImagesUrl))
+                        .Select(img => img.ImagesUrl))
                 : ""))
                 .ForMember(d => d.BrandName, o => o.MapFrom(s => s.Brand!.BrandName))
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category!.CategoryName))
@@ -91,7 +93,9 @@ namespace AdminPanel.Apis.Helpers.Mapping
 
             // For Export
             CreateMap<ReportTransaction, ReportTransactionExportToReturnDTO>()
-                .ForMember(d => d.Items, o => o.MapFrom(s => s.Items !=null ? string.Join(" And ", s.Items.Select(x => x.ProductName)): ""));
+                .ForMember(d => d.Items, o => o.MapFrom(s => s.Items !=null ? string.Join(" And ", s.Items.Select(x => x.ProductName)): ""))
+                .ForMember(d => d.TotalReportTransactionPrice, o => o.MapFrom(s => s.TotalReportTransaction))
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName));
             #endregion
 
             #region PurchaseInvoice Mapping
