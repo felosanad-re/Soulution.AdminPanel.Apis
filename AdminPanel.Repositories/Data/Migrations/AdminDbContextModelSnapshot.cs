@@ -59,7 +59,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands");
+                    b.ToTable("Brands", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Categories.Category", b =>
@@ -99,7 +99,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Identity.ApplicationUser", b =>
@@ -239,7 +239,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Products.ProductImages", b =>
@@ -278,7 +278,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.PurchaseInvoices.PurchaseInvoice", b =>
@@ -320,7 +320,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PurchaseInvoices");
+                    b.ToTable("PurchaseInvoices", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.PurchaseInvoices.PurchaseInvoiceItems", b =>
@@ -356,7 +356,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("PurchaseInvoiceId");
 
-                    b.ToTable("PurchaseInvoiceItems");
+                    b.ToTable("PurchaseInvoiceItems", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Reports.ReportTransaction", b =>
@@ -398,7 +398,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportTransactions");
+                    b.ToTable("ReportTransactions", (string)null);
                 });
 
             modelBuilder.Entity("AdminPanel.Core.Entities.Reports.ReportTransactionItem", b =>
@@ -434,7 +434,7 @@ namespace AdminPanel.Repositories.Data.Migrations
 
                     b.HasIndex("ReportTransactionId");
 
-                    b.ToTable("ReportTransactionItem");
+                    b.ToTable("ReportTransactionItem", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

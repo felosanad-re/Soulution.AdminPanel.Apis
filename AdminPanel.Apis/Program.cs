@@ -41,12 +41,13 @@ namespace AdminPanel.Apis
 
             builder.Services.AddErrorMessage();
 
+            var allowedOrigins = builder.Configuration.GetSection("AllowCORS").Get<string[]>();
             //Add Policy
             builder.Services.AddCors(action =>
             {
                 action.AddPolicy("Angular", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                    policy.WithOrigins(allowedOrigins)
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                     //.AllowCredentials();
