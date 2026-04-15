@@ -25,10 +25,10 @@ namespace AdminPanel.Services.ChartServices
             var toDate = dTO.ToDate ?? DateTime.UtcNow;
             var fromDate = dTO.FromDate ?? toDate.AddDays(-30);
             var range = (toDate.Date - fromDate.Date).TotalDays; // To Get Range Days
-            var selesSpec = new ReportWithTotalTransactionPrice(dTO);
+            var salesSpec = new SalesReportWithTotalTransactionPrice(dTO);
             var purchaseSpec = new PurchaseWithTotal(dTO);
             // Select Column TotalReportTransactionPrice || CreatedAt
-            var totalSelase = await _unitOfWork.CreateRepository<ReportTransaction>().GetSelectedAsync(selesSpec, R => new
+            var totalSales = await _unitOfWork.CreateRepository<ReportTransaction>().GetSelectedAsync(salesSpec, R => new
             {
                 R.TotalReportTransaction,
                 R.CreatedAt
@@ -43,21 +43,21 @@ namespace AdminPanel.Services.ChartServices
             // Days
             if(range <= 30)
             {
-                salesGrouped = GroupByDay(totalSelase);
+                salesGrouped = GroupByDay(totalSales);
                 purchaseGrouped = GroupByDay(totalPurchase);
             }
 
             // weakly
             else if (range <= 90)
             {
-                salesGrouped = GroupByWeek(totalSelase);
+                salesGrouped = GroupByWeek(totalSales);
                 purchaseGrouped = GroupByWeek(totalPurchase);
             }
 
             // Monthly
             else
             {
-                salesGrouped = GroupByMonthly(totalSelase);
+                salesGrouped = GroupByMonthly(totalSales);
                 purchaseGrouped = GroupByMonthly(totalPurchase);
             }
             // Normalize labels
@@ -66,8 +66,8 @@ namespace AdminPanel.Services.ChartServices
                 .Union(purchaseGrouped.Select(x => x.label))
                 .OrderBy(x => x)
                 .ToList();
-            var salesData = allLabels.Select(lable => purchaseGrouped.FirstOrDefault(x => x.label == lable)?.Total ?? 0).ToList();
-            var purchaseData = allLabels.Select(lable => salesGrouped.FirstOrDefault(x => x.label == lable)?.Total ?? 0).ToList();
+            var salesData = allLabels.Select(lable => salesGrouped.FirstOrDefault(x => x.label == lable)?.Total ?? 0).ToList();
+            var purchaseData = allLabels.Select(lable => purchaseGrouped.FirstOrDefault(x => x.label == lable)?.Total ?? 0).ToList();
 
             return new ChartsToReturnDTO
             {

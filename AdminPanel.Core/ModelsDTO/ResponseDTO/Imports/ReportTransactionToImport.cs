@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdminPanel.Core.ModelsDto.ResponseDTO.Imports
 {
-    public class ReportTransactionToImport
+    public class SalesReportTransactionToImport
     {
         // Header names here should match the exported Excel columns so generic import can bind them automatically.
         [Column("Id")]

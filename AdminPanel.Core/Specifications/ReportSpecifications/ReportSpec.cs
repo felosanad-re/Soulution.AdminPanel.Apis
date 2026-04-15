@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Core.Specifications.ReportSpecifications
 {
-    public class ReportSpec : BaseSpecifications<ReportTransaction>
+    public class SalesReportSpec : BaseSpecifications<ReportTransaction>
     {
-        public ReportSpec()
+        public SalesReportSpec()
             :base()
         {
             AddIncludes();
         }
 
-        public ReportSpec(int id)
+        public SalesReportSpec(int id)
             :base(R => R.Id == id)
         {
             AddIncludes();
         }
 
-        public ReportSpec(IEnumerable<int> reportIds)
+        public SalesReportSpec(IEnumerable<int> reportIds)
             : base(R => reportIds.Contains(R.Id))
         {
             AddIncludes();

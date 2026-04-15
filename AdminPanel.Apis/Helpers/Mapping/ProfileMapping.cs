@@ -74,28 +74,28 @@ namespace AdminPanel.Apis.Helpers.Mapping
             #endregion
 
             #region Report Mapping
-            CreateMap<ReportTransaction, ReportTransactionToReturnDTO>()
-                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName))
-                .ForMember(d => d.UserId, o => o.MapFrom(s => s.ApplicationUser.Id))
-                .ForMember(d => d.CreatedBy, o => o.MapFrom(s => s.ApplicationUser.UserName))
-                .ForMember(d => d.ModifiedBy, o => o.MapFrom(s => s.ApplicationUser.UserName))
+            CreateMap<ReportTransaction, SalesReportTransactionToReturnDTO>()
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser != null ? s.ApplicationUser.UserName : s.CreatedBy))
+                .ForMember(d => d.UserId, o => o.MapFrom(s => s.ApplicationUser != null ? s.ApplicationUser.Id : s.UserId))
+                .ForMember(d => d.CreatedBy, o => o.MapFrom(s => s.ApplicationUser != null ? s.ApplicationUser.UserName : s.CreatedBy))
+                .ForMember(d => d.ModifiedBy, o => o.MapFrom(s => s.ApplicationUser != null ? s.ApplicationUser.UserName : s.ModifiedBy))
                 .ForMember(d => d.Items, o => o.MapFrom(s => s.Items));
 
-            CreateMap<ReportTransactionItemDTO, ReportTransactionItem>();
+            CreateMap<SalesReportTransactionItemDTO, ReportTransactionItem>();
 
-            CreateMap<CreateReportDTO, ReportTransaction>()
+            CreateMap<CreateSalesReportDTO, ReportTransaction>()
                 .ForMember(d => d.Items, o => o.MapFrom(s => s.Items));
 
-            CreateMap<ReportTransactionItem, ReportTransactionItemToReturnDTO>()
+            CreateMap<ReportTransactionItem, SalesReportTransactionItemToReturnDTO>()
                 .ForMember(d => d.ProductId, o => o.MapFrom(s => s.ProductId))
                 .ForMember(d => d.Price, o => o.MapFrom(s => s.Price))
                 .ForMember(d => d.ProductName, o => o.MapFrom(s => s.ProductName));
 
             // For Export
-            CreateMap<ReportTransaction, ReportTransactionExportToReturnDTO>()
+            CreateMap<ReportTransaction, SalesReportTransactionExportToReturnDTO>()
                 .ForMember(d => d.Items, o => o.MapFrom(s => s.Items !=null ? string.Join(" And ", s.Items.Select(x => x.ProductName)): ""))
                 .ForMember(d => d.TotalReportTransactionPrice, o => o.MapFrom(s => s.TotalReportTransaction))
-                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser.UserName));
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.ApplicationUser != null ? s.ApplicationUser.UserName : s.CreatedBy));
             #endregion
 
             #region PurchaseInvoice Mapping

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Core.ModelsDto.ResponseDTO.Reports
 {
-    public class ReportTransactionItemToReturnDTO
+    public class SalesReportTransactionItemToReturnDTO
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;

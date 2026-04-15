@@ -2,6 +2,7 @@ using AdminPanel.Apis.Errors_Handler;
 using AdminPanel.Apis.Extensions;
 using AdminPanel.Core.Entities.Identity;
 using AdminPanel.Repositories.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -27,7 +28,7 @@ namespace AdminPanel.Apis
             // Add Connection String
             builder.Services.AddDbContext<AdminDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+                options.UseSqlServer(BuildConnectionString(builder.Configuration));
             });
 
             // Add Identity
@@ -88,6 +89,30 @@ namespace AdminPanel.Apis
             #endregion
 
             app.Run();
+        }
+
+        private static string BuildConnectionString(IConfiguration configuration)
+        {
+            var configuredConnectionString = configuration.GetConnectionString("Default");
+            if (string.IsNullOrWhiteSpace(configuredConnectionString))
+            {
+                throw new InvalidOperationException("Connection string 'Default' is missing.");
+            }
+
+            var connectionStringBuilder = new SqlConnectionStringBuilder(configuredConnectionString);
+            var passwordFromSecret = configuration["ConnectionStrings:DefaultPassword"];
+
+            if (!string.IsNullOrWhiteSpace(passwordFromSecret))
+            {
+                connectionStringBuilder.Password = passwordFromSecret;
+            }
+
+            if (!connectionStringBuilder.IntegratedSecurity && string.IsNullOrWhiteSpace(connectionStringBuilder.Password))
+            {
+                throw new InvalidOperationException("Database password is missing. Set 'ConnectionStrings__DefaultPassword' or provide a full 'ConnectionStrings__Default' value outside git.");
+            }
+
+            return connectionStringBuilder.ConnectionString;
         }
     }
 }

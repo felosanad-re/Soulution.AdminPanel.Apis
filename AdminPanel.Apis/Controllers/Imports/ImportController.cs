@@ -10,13 +10,13 @@ namespace AdminPanel.Apis.Controllers.Imports
 {
     public class ImportController : BaseController
     {
-        protected readonly IReportTransactionService _reportService;
+        protected readonly ISalesReportTransactionService _salesReportService;
         protected readonly IProductService _productService;
         protected readonly IPurchaseService _purchaseService;
 
-        public ImportController(IReportTransactionService reportService, IProductService productService, IPurchaseService purchaseService)
+        public ImportController(ISalesReportTransactionService salesReportService, IProductService productService, IPurchaseService purchaseService)
         {
-            _reportService = reportService;
+            _salesReportService = salesReportService;
             _productService = productService;
             _purchaseService = purchaseService;
         }
@@ -49,19 +49,18 @@ namespace AdminPanel.Apis.Controllers.Imports
         #endregion
 
         #region Import Buyer
-        [HttpPost("Buyer")] // Post: /api/Import/Buyer
-        public async Task<ActionResult<ImportToReturnDTO<BuyerToReturnRow>>> ImportBuyer([FromForm] ImportDTO<ReportTransactionToImport> req)
+        [HttpPost("SalesReport")] // Post: /api/Import/SalesReport
+        public async Task<ActionResult<ImportToReturnDTO<SalesReportImportRow>>> ImportSalesReport([FromForm] ImportDTO<SalesReportTransactionToImport> req)
         {
             if (req.File == null || req.File.Length == 0)
             {
-                return BadRequest(new ImportToReturnDTO<BuyerToReturnRow>
+                return BadRequest(new ImportToReturnDTO<SalesReportImportRow>
                 {
                     Errors = new List<string> { "Excel File is required" }
                 });
             }
 
-            // Let the report service read the sheet and shape the response rows.
-            var data = await _reportService.GetReportForImportAsync(req);
+            var data = await _salesReportService.GetSalesReportForImportAsync(req);
             return Ok(data);
         }
         #endregion

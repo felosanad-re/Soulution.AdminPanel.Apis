@@ -51,8 +51,8 @@ namespace AdminPanel.Apis.Extensions
             services.AddScoped<IPurchaseService, PurchaseService>();
             // Add Role Service
             services.AddScoped<IRoleService, RoleService>();
-            // Add Report Transaction Service
-            services.AddScoped<IReportTransactionService, ReportTransactionService>();
+            // Add Sales Report Transaction Service
+            services.AddScoped<ISalesReportTransactionService, SalesReportTransactionService>();
             // Add Brand Service
             services.AddScoped<IBrandService, BrandService>();
             // Add Category Service

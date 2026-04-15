@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdminPanel.Core.ModelsDto.ResponseDTO.Reports
 {
-    public class BuyerToReturnRow
+    public class SalesReportImportRow
     {
         public int Id { get; set; }
         public string UserName { get; set; }

@@ -2,14 +2,14 @@
 
 namespace AdminPanel.Core.ModelsDto.ResponseDTO.Reports
 {
-    public class ReportTransactionToReturnDTO
+    public class SalesReportTransactionToReturnDTO
     {
         public int Id { get; set; }
         public string UserName { get; set; }
         public string UserId { get; set; }
 
         public string CompanyName { get; set; }
-        public List<ReportTransactionItemToReturnDTO> Items { get; set; } = new List<ReportTransactionItemToReturnDTO>();
+        public List<SalesReportTransactionItemToReturnDTO> Items { get; set; } = new List<SalesReportTransactionItemToReturnDTO>();
 
         public decimal TotalReportTransaction { get; set; }
 

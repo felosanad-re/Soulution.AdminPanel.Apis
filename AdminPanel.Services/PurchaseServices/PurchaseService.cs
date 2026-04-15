@@ -75,11 +75,11 @@ namespace AdminPanel.Services.PurchaseServices
             try
             {
                 var productRepo = _unitOfWork.CreateRepository<Product>();
-                var createPurchase = _mapper.Map<PurchaseInvoice>(dto);
-                createPurchase.CreatedBy = userName; // Admin Account
-                createPurchase.UserName = userName; // Admin Name
-                createPurchase.CreatedAt = DateTime.UtcNow;
-                foreach (var item in createPurchase.Items)
+                var purchaseToSave = _mapper.Map<PurchaseInvoice>(dto);
+                purchaseToSave.CreatedBy = userName; // Admin Account
+                purchaseToSave.UserName = userName; // Admin Name
+                purchaseToSave.CreatedAt = DateTime.UtcNow;
+                foreach (var item in purchaseToSave.Items)
                 {
                     var product = await productRepo.GetAsync(item.ProductId);
                     if(product == null) return ResultServiceApplication<PurchaseInvoiceToReturnDTO>
@@ -88,11 +88,13 @@ namespace AdminPanel.Services.PurchaseServices
                     item.ProductName = product.ProductName;
                     item.GetTotalPrice();
                 }
-                createPurchase.GetTotalPurchase();
-                await _unitOfWork.CreateRepository<PurchaseInvoice>().AddAsync(createPurchase);
+
+                purchaseToSave.GetTotalPurchase();
+                await _unitOfWork.CreateRepository<PurchaseInvoice>().AddAsync(purchaseToSave);
                 await _unitOfWork.CompleteAsync();
-                var data = _mapper.Map<PurchaseInvoiceToReturnDTO>(createPurchase);
-                return ResultServiceApplication<PurchaseInvoiceToReturnDTO>.Success(data, "Purchase Report Save Successfully");
+
+                var purchaseToReturn = _mapper.Map<PurchaseInvoiceToReturnDTO>(purchaseToSave);
+                return ResultServiceApplication<PurchaseInvoiceToReturnDTO>.Success(purchaseToReturn, "Purchase report saved successfully");
             }
             catch (Exception ex)
             {
@@ -135,7 +137,6 @@ namespace AdminPanel.Services.PurchaseServices
         #region GetPurchaseForImportAsync
         public async Task<ImportToReturnDTO<PurchaseInvoiceToImport>> GetPurchaseForImportAsync(ImportDTO<PurchaseInvoiceToImport> req)
         {
-            // Parse purchase rows from Excel using the same shared import service.
             var importedRows = await _serviceImport.ExcelImportAsync(req);
 
             var purchaseRepo = _unitOfWork.CreateRepository<PurchaseInvoice>();
@@ -158,18 +159,33 @@ namespace AdminPanel.Services.PurchaseServices
                 .Where(row => row.Id <= 0 || !existingPurchaseIds.Contains(row.Id))
                 .ToList();
 
+            var purchasesToSave = newRows.Select(row => new PurchaseInvoice
+            {
+                UserName = row.UserName,
+                CompanyName = row.CompanyName,
+                TotalReportTransaction = row.TotalReportTransaction,
+                CreatedBy = string.IsNullOrWhiteSpace(row.CreatedBy) ? row.UserName : row.CreatedBy
+            }).ToList();
+
+            if (purchasesToSave.Any())
+            {
+                await purchaseRepo.AddRangeAsync(purchasesToSave);
+                await _unitOfWork.CompleteAsync();
+            }
+
             var errors = importedRows.Errors ?? new List<string>();
             var skippedPurchasesCount = importedRows.Data.Count - newRows.Count;
             if (skippedPurchasesCount > 0)
             {
-                errors.Add($"{skippedPurchasesCount} existing sales report(s) were skipped during import.");
+                errors.Add($"{skippedPurchasesCount} existing purchase record(s) were skipped during import.");
             }
 
-            // Return parsed purchase rows directly because the Items column is stored as text in the sheet.
             return new ImportToReturnDTO<PurchaseInvoiceToImport>
             {
                 Data = newRows,
                 TotalRows = newRows.Count,
+                AddedCount = newRows.Count,
+                SkippedDuplicates = skippedPurchasesCount,
                 Errors = errors
             };
         }

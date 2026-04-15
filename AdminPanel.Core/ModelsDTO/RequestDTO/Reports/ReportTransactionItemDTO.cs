@@ -2,7 +2,7 @@
 
 namespace AdminPanel.Core.ModelsDto.RequestDTO.Reports
 {
-    public class ReportTransactionItemDTO
+    public class SalesReportTransactionItemDTO
     {
         [Required]
         public int ProductId { get; set; }

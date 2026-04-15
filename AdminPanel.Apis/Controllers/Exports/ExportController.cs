@@ -15,13 +15,13 @@ namespace AdminPanel.Apis.Controllers.Exports
         protected readonly IExportService _exportService;
         protected readonly IProductService _productService;
         protected readonly IPurchaseService _purchaseService;
-        protected readonly IReportTransactionService _reportTransactionService;
-        public ExportController(IExportService exportService, IProductService productService, IPurchaseService purchaseService, IReportTransactionService reportTransactionService)
+        protected readonly ISalesReportTransactionService _salesReportTransactionService;
+        public ExportController(IExportService exportService, IProductService productService, IPurchaseService purchaseService, ISalesReportTransactionService salesReportTransactionService)
         {
             _exportService = exportService;
             _productService = productService;
             _purchaseService = purchaseService;
-            _reportTransactionService = reportTransactionService;
+            _salesReportTransactionService = salesReportTransactionService;
         }
 
         #region Export Products
@@ -63,15 +63,15 @@ namespace AdminPanel.Apis.Controllers.Exports
         #endregion
 
         #region Export Buyer
-        [HttpGet("Buyer")] // Get: /api/Export/Buyer
-        public async Task<IActionResult> ExportBuyer()
+        [HttpGet("SalesReport")] // Get: /api/Export/SalesReport
+        public async Task<IActionResult> ExportSalesReport()
         {
-            var request = new ExportRequest<ReportTransactionExportToReturnDTO>
+            var request = new ExportRequest<SalesReportTransactionExportToReturnDTO>
             {
-                WorksheetName = "Buyer",
+                WorksheetName = "SalesReport",
                 DataFetcher = async () =>
                 {
-                    return await _reportTransactionService.GetReportForExportAsync();
+                    return await _salesReportTransactionService.GetSalesReportForExportAsync();
                 }
             };
 
