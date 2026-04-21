@@ -132,12 +132,45 @@ namespace AdminPanel.Services.PurchaseServices
             var result = _mapper.Map<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>>(data);
             return result;
         }
+
+        public async Task<IReadOnlyList<PurchaseInvoiceItemExportToReturnDTO>> GetPurchaseItemsExport()
+        {
+            var spec = new PurchaseSpec();
+            var purchases = await _unitOfWork.CreateRepository<PurchaseInvoice>().GetAllAsyncSpec(spec);
+
+            var result = purchases
+                .SelectMany(purchase => purchase.Items.Select(item => new PurchaseInvoiceItemExportToReturnDTO
+                {
+                    PurchaseInvoiceId = purchase.Id,
+                    ItemId = item.Id,
+                    UserName = purchase.UserName,
+                    CompanyName = purchase.CompanyName,
+                    ProductId = item.ProductId,
+                    ProductName = item.ProductName,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    TotalPrice = item.TotalPrice
+                }))
+                .ToList();
+
+            return result;
+        }
         #endregion
 
         #region GetPurchaseForImportAsync
         public async Task<ImportToReturnDTO<PurchaseInvoiceToImport>> GetPurchaseForImportAsync(ImportDTO<PurchaseInvoiceToImport> req)
         {
-            var importedRows = await _serviceImport.ExcelImportAsync(req);
+            var importedRows = await _serviceImport.ExcelImportAsync(new ImportDTO<PurchaseInvoiceToImport>
+            {
+                File = req.File,
+                Config = BuildImportConfig<PurchaseInvoiceToImport>("Purchase")
+            });
+
+            var importedItems = await _serviceImport.ExcelImportAsync(new ImportDTO<PurchaseInvoiceItemExportToReturnDTO>
+            {
+                File = req.File,
+                Config = BuildImportConfig<PurchaseInvoiceItemExportToReturnDTO>("PurchaseItems")
+            });
 
             var purchaseRepo = _unitOfWork.CreateRepository<PurchaseInvoice>();
             var importedPurchaseIds = importedRows.Data
@@ -159,12 +192,39 @@ namespace AdminPanel.Services.PurchaseServices
                 .Where(row => row.Id <= 0 || !existingPurchaseIds.Contains(row.Id))
                 .ToList();
 
-            var purchasesToSave = newRows.Select(row => new PurchaseInvoice
+            var itemLookup = importedItems.Data
+                .GroupBy(item => item.PurchaseInvoiceId)
+                .ToDictionary(group => group.Key, group => group.ToList());
+
+            var purchasesToSave = newRows.Select(row =>
             {
-                UserName = row.UserName,
-                CompanyName = row.CompanyName,
-                TotalReportTransaction = row.TotalReportTransaction,
-                CreatedBy = string.IsNullOrWhiteSpace(row.CreatedBy) ? row.UserName : row.CreatedBy
+                var purchase = new PurchaseInvoice
+                {
+                    UserName = row.UserName,
+                    CompanyName = row.CompanyName,
+                    CreatedBy = string.IsNullOrWhiteSpace(row.CreatedBy) ? row.UserName : row.CreatedBy,
+                    CreatedAt = row.CreatedAt == default ? DateTime.UtcNow : row.CreatedAt
+                };
+
+                if (itemLookup.TryGetValue(row.Id, out var purchaseItems))
+                {
+                    purchase.Items = purchaseItems.Select(item => new PurchaseInvoiceItems
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        TotalPrice = item.TotalPrice
+                    }).ToList();
+
+                    purchase.GetTotalPurchase();
+                }
+                else
+                {
+                    purchase.TotalReportTransaction = row.TotalReportTransaction;
+                }
+
+                return purchase;
             }).ToList();
 
             if (purchasesToSave.Any())
@@ -173,7 +233,10 @@ namespace AdminPanel.Services.PurchaseServices
                 await _unitOfWork.CompleteAsync();
             }
 
-            var errors = importedRows.Errors ?? new List<string>();
+            var errors = (importedRows.Errors ?? new List<string>())
+                .Concat(importedItems.Errors ?? new List<string>())
+                .Distinct()
+                .ToList();
             var skippedPurchasesCount = importedRows.Data.Count - newRows.Count;
             if (skippedPurchasesCount > 0)
             {
@@ -187,6 +250,16 @@ namespace AdminPanel.Services.PurchaseServices
                 AddedCount = newRows.Count,
                 SkippedDuplicates = skippedPurchasesCount,
                 Errors = errors
+            };
+        }
+
+        private static ImportExcelConfiguration<T> BuildImportConfig<T>(string sheetName)
+        {
+            return new ImportExcelConfiguration<T>
+            {
+                SheetName = sheetName,
+                StartRow = 2,
+                HasHeader = true
             };
         }
         #endregion

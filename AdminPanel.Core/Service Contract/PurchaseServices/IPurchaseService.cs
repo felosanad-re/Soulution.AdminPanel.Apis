@@ -16,6 +16,7 @@ namespace AdminPanel.Core.Service_Contract.PurchaseServices
         Task<ResultServiceApplication<bool>> Delete(int id);
 
         Task<IReadOnlyList<PurchaseInvoiceExportToReturnDTO>> GetPurchaseExport();
+        Task<IReadOnlyList<PurchaseInvoiceItemExportToReturnDTO>> GetPurchaseItemsExport();
         Task<ImportToReturnDTO<PurchaseInvoiceToImport>> GetPurchaseForImportAsync(ImportDTO<PurchaseInvoiceToImport> req);
     }
 }
