@@ -66,6 +66,7 @@ namespace AdminPanel.Apis.Helpers.Mapping
 
             // Import 
             CreateMap<ProductToImport, Product>()
+                .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.SubImages, o => o.Ignore())
                 .ForMember(d => d.BrandId, o => o.MapFrom(s => s.BrandId))
                 .ForMember(d => d.CategoryId, o => o.MapFrom(s => s.CategoryId))

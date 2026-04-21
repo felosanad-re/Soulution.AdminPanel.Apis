@@ -243,16 +243,66 @@ namespace AdminPanel.Services.ProductServices
             var dataMapping = _mapper.Map<IReadOnlyList<ProductExportToReturnDTO>>(data);
             return dataMapping;
         }
+
+        public async Task<IReadOnlyList<ProductImageExportToReturnDTO>> GetProductImagesForExportAsync()
+        {
+            var spec = new ProductSpec();
+            var products = await _unitOfWork.CreateRepository<Product>().GetAllAsyncSpec(spec);
+
+            var result = products
+                .SelectMany(product =>
+                {
+                    var images = new List<ProductImageExportToReturnDTO>();
+
+                    if (!string.IsNullOrWhiteSpace(product.MainImage))
+                    {
+                        images.Add(new ProductImageExportToReturnDTO
+                        {
+                            ProductId = product.Id,
+                            ProductName = product.ProductName,
+                            ImageType = "Main",
+                            ImageUrl = product.MainImage
+                        });
+                    }
+
+                    if (product.SubImages != null)
+                    {
+                        images.AddRange(product.SubImages
+                            .Where(image => !string.IsNullOrWhiteSpace(image.ImagesUrl))
+                            .Select(image => new ProductImageExportToReturnDTO
+                            {
+                                ProductId = product.Id,
+                                ProductName = product.ProductName,
+                                ImageType = "Thumbnail",
+                                ImageUrl = image.ImagesUrl
+                            }));
+                    }
+
+                    return images;
+                })
+                .ToList();
+
+            return result;
+        }
         #endregion
 
         #region GetProductForImport
         public async Task<ImportToReturnDTO<ProductToImport>> GetProductForImport(ImportDTO<ProductToImport> req)
         {
-            // Get Product in file
-            var productImport = await _serviceImport.ExcelImportAsync(req);
+            var productImport = await _serviceImport.ExcelImportAsync(new ImportDTO<ProductToImport>
+            {
+                File = req.File,
+                Config = BuildImportConfig<ProductToImport>("Products")
+            });
 
-            // Get Rows
+            var productImagesImport = await _serviceImport.ExcelImportAsync(new ImportDTO<ProductImageExportToReturnDTO>
+            {
+                File = req.File,
+                Config = BuildImportConfig<ProductImageExportToReturnDTO>("ProductImages")
+            });
+
             var excelRows = productImport.Data;
+            var imageLookup = BuildProductImageLookup(productImagesImport.Data);
 
             var productToSave = new List<Product>(); // To Save In DB
             var importProduct = new List<ProductToImport>(); // To Return
@@ -274,46 +324,21 @@ namespace AdminPanel.Services.ProductServices
 
             foreach (var row in excelRows)
             {
-                // Excel stores sub-images as one text cell, so split it before creating ProductImages rows.
-                var subImageUrls = SplitImageUrls(row.SubImages);
+                var productImages = GetProductImages(imageLookup, row.Id, row.ProductName);
 
                 // Update for data
                 if(row.Id > 0 && exsistingDigit.TryGetValue(row.Id, out var existing))
                 {
                     _mapper.Map(row, existing); // Update Mapping
-                    if (existing.SubImages == null)
-                    {
-                        existing.SubImages = new List<ProductImages>();
-                    }
-
-                    if (subImageUrls.Any())
-                    {
-                        existing.SubImages.Clear(); // Delete Images
-                        var newImages = subImageUrls
-                            .Select(url => new ProductImages
-                            {
-                                Product = existing,
-                                ImagesUrl = url,
-                            }).ToList();
-                        foreach (var image in newImages)
-                        {
-                            existing.SubImages.Add(image);
-                        }
-                    }
+                    ApplyProductImages(existing, productImages);
                     importProduct.Add(row);
                 }
                 // Add Products
                 else
                 {
                     var newProducts = _mapper.Map<Product>(row);
-                    if (subImageUrls.Any())
-                    {
-                        newProducts.SubImages = subImageUrls.Select(url => new ProductImages
-                        {
-                            Product = newProducts,
-                            ImagesUrl = url,
-                        }).ToList();
-                    }
+                    newProducts.Id = 0; // Let SQL Server generate the identity value for new rows.
+                    ApplyProductImages(newProducts, productImages);
                     productToSave.Add(newProducts);
                     importProduct.Add(row);
                 }
@@ -330,24 +355,75 @@ namespace AdminPanel.Services.ProductServices
             {
                 Data = importProduct,
                 TotalRows = excelRows.Count,
-                Errors = new List<string>()
+                Errors = productImport.Errors
+                    .Concat(productImagesImport.Errors)
+                    .Distinct()
+                    .ToList()
             };
         }
 
-        private static List<string> SplitImageUrls(string? subImages)
+        #region helper methods
+        private static ImportExcelConfiguration<T> BuildImportConfig<T>(string sheetName)
         {
-            if (string.IsNullOrWhiteSpace(subImages))
+            return new ImportExcelConfiguration<T>
             {
-                return new List<string>();
+                SheetName = sheetName,
+                StartRow = 2,
+                HasHeader = true
+            };
+        }
+
+        private static Dictionary<string, List<ProductImageExportToReturnDTO>> BuildProductImageLookup(IEnumerable<ProductImageExportToReturnDTO> imageRows)
+        {
+            return imageRows
+                .GroupBy(image => BuildLookupKey(image.ProductId, image.ProductName))
+                .ToDictionary(group => group.Key, group => group.ToList(), StringComparer.OrdinalIgnoreCase);
+        }
+
+        private static List<ProductImageExportToReturnDTO> GetProductImages(
+            IReadOnlyDictionary<string, List<ProductImageExportToReturnDTO>> imageLookup,
+            int productId,
+            string productName)
+        {
+            if (imageLookup.TryGetValue(BuildLookupKey(productId, productName), out var images))
+            {
+                return images;
             }
 
-            // Support the same separators used by exported sheets or manual Excel edits.
-            return subImages
-                .Split(new[] { " And ", ",", ";", "|" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Where(url => !string.IsNullOrWhiteSpace(url))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
+            return new List<ProductImageExportToReturnDTO>();
+        }
+
+        private static void ApplyProductImages(Product product, IEnumerable<ProductImageExportToReturnDTO> images)
+        {
+            var imageList = images.ToList();
+            var mainImage = imageList
+                .FirstOrDefault(image => image.ImageType.Equals("Main", StringComparison.OrdinalIgnoreCase))
+                ?.ImageUrl;
+
+            product.MainImage = string.IsNullOrWhiteSpace(mainImage) ? string.Empty : mainImage;
+
+            product.SubImages = imageList
+                .Where(image =>
+                    image.ImageType.Equals("Thumbnail", StringComparison.OrdinalIgnoreCase) &&
+                    !string.IsNullOrWhiteSpace(image.ImageUrl))
+                .Select(image => new ProductImages
+                {
+                    Product = product,
+                    ImagesUrl = image.ImageUrl,
+                })
                 .ToList();
         }
+
+        private static string BuildLookupKey(int id, string? name)
+        {
+            if (id > 0)
+            {
+                return $"id:{id}";
+            }
+
+            return $"name:{name?.Trim().ToLowerInvariant()}";
+        }
+        #endregion
         #endregion
     }
 }

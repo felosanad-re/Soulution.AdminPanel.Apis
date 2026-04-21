@@ -27,6 +27,7 @@ namespace AdminPanel.Core.Service_Contract.ProductServices
         Task<int> GetProductCount(ProductParams @params);
 
         Task<IReadOnlyList<ProductExportToReturnDTO>> GetProductForExportAsync();
+        Task<IReadOnlyList<ProductImageExportToReturnDTO>> GetProductImagesForExportAsync();
 
         Task<ImportToReturnDTO<ProductToImport>> GetProductForImport(ImportDTO<ProductToImport> req);
     }
