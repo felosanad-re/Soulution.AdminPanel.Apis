@@ -21,7 +21,7 @@ namespace AdminPanel.Apis.Controllers.Reports
         #endregion
 
         #region Get All
-        [HttpGet("sales-reports")] // Get: /api/SalesReport/salesReports
+        [HttpGet("salesReports")] // Get: /api/SalesReport/salesReports
         public async Task<ActionResult<ResultServiceApplication<IReadOnlyList<SalesReportTransactionToReturnDTO>>>> GetAll()
         {
             var data = await _salesReportTransactionService.GetAllAsync();

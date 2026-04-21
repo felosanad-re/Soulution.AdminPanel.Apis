@@ -16,6 +16,7 @@ namespace AdminPanel.Core.Service_Contract.ReportServices
         Task<ResultServiceApplication<bool>> DeleteSalesReportAsync(int id);
 
         Task<IReadOnlyList<SalesReportTransactionExportToReturnDTO>> GetSalesReportForExportAsync();
+        Task<IReadOnlyList<SalesReportTransactionItemExportToReturnDTO>> GetSalesReportItemsForExportAsync();
         Task<ImportToReturnDTO<SalesReportImportRow>> GetSalesReportForImportAsync(ImportDTO<SalesReportTransactionToImport> req);
     }
 }

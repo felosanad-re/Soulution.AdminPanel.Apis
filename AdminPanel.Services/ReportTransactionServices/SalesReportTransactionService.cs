@@ -142,12 +142,47 @@ namespace AdminPanel.Services.ReportTransactionServices
             var mappingData = _mapper.Map<IReadOnlyList<SalesReportTransactionExportToReturnDTO>>(data);
             return mappingData;
         }
+
+        public async Task<IReadOnlyList<SalesReportTransactionItemExportToReturnDTO>> GetSalesReportItemsForExportAsync()
+        {
+            var spec = new SalesReportSpec();
+            var reports = await _unitOfWork.CreateRepository<ReportTransaction>().GetAllAsyncSpec(spec);
+
+            var result = reports
+                .SelectMany(report => report.Items.Select(item => new SalesReportTransactionItemExportToReturnDTO
+                {
+                    SalesReportId = report.Id,
+                    ItemId = item.Id,
+                    UserId = report.UserId,
+                    UserName = report.ApplicationUser != null ? report.ApplicationUser.UserName! : report.CreatedBy,
+                    CompanyName = report.CompanyName,
+                    ProductId = item.ProductId,
+                    ProductName = item.ProductName,
+                    Price = item.Price,
+                    Quantity = item.Quantity,
+                    TotalPrice = item.TotalPrice
+                }))
+                .ToList();
+
+            return result;
+        }
         #endregion
 
         #region GetReportForImportAsync
         public async Task<ImportToReturnDTO<SalesReportImportRow>> GetSalesReportForImportAsync(ImportDTO<SalesReportTransactionToImport> req)
         {
-            var importedRows = await _serviceImport.ExcelImportAsync(req);
+            var importedRows = await _serviceImport.ExcelImportAsync(new ImportDTO<SalesReportTransactionToImport>
+            {
+                File = req.File,
+                Config = BuildImportConfig<SalesReportTransactionToImport>("SalesReport")
+            });
+
+            var importedItems = await _serviceImport.ExcelImportAsync(new ImportDTO<SalesReportTransactionItemExportToReturnDTO>
+            {
+                File = req.File,
+                Config = BuildImportConfig<SalesReportTransactionItemExportToReturnDTO>("SalesReportItems")
+            });
+
             var reportRepo = _unitOfWork.CreateRepository<ReportTransaction>();
             var importedReportIds = importedRows.Data
                 .Where(row => row.Id > 0)
@@ -168,14 +203,42 @@ namespace AdminPanel.Services.ReportTransactionServices
                 .Where(row => row.Id <= 0 || !existingReportIds.Contains(row.Id))
                 .ToList();
 
-            var salesReportsToSave = newRows.Select(row => new ReportTransaction
+            var itemLookup = importedItems.Data
+                .GroupBy(item => item.SalesReportId)
+                .ToDictionary(group => group.Key, group => group.ToList());
+
+            var salesReportsToSave = newRows.Select(row =>
             {
-                UserId = row.UserId,
-                CompanyName = row.CompanyName,
-                TotalReportTransaction = row.TotalReportTransactionPrice,
-                IsDeleted = row.IsDeleted,
-                CreatedBy = string.IsNullOrWhiteSpace(row.CreatedBy) ? row.UserName : row.CreatedBy,
-                ModifiedBy = row.ModifiedBy
+                var report = new ReportTransaction
+                {
+                    UserId = row.UserId,
+                    CompanyName = row.CompanyName,
+                    IsDeleted = row.IsDeleted,
+                    CreatedBy = string.IsNullOrWhiteSpace(row.CreatedBy) ? row.UserName : row.CreatedBy,
+                    ModifiedBy = row.ModifiedBy,
+                    CreatedAt = row.CreatedAt == default ? DateTime.UtcNow : row.CreatedAt,
+                    LastModifiedAt = row.LastModifiedAt == default ? DateTime.UtcNow : row.LastModifiedAt
+                };
+
+                if (itemLookup.TryGetValue(row.Id, out var reportItems))
+                {
+                    report.Items = reportItems.Select(item => new ReportTransactionItem
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        TotalPrice = item.TotalPrice
+                    }).ToList();
+
+                    report.GetTotalReportTransactionPrice();
+                }
+                else
+                {
+                    report.TotalReportTransaction = row.TotalReportTransactionPrice;
+                }
+
+                return report;
             }).ToList();
 
             if (salesReportsToSave.Any())
@@ -199,7 +262,10 @@ namespace AdminPanel.Services.ReportTransactionServices
                 ModifiedBy = row.ModifiedBy
             }).ToList();
 
-            var errors = importedRows.Errors ?? new List<string>();
+            var errors = (importedRows.Errors ?? new List<string>())
+                .Concat(importedItems.Errors ?? new List<string>())
+                .Distinct()
+                .ToList();
             var skippedReportsCount = importedRows.Data.Count - newRows.Count;
             if (skippedReportsCount > 0)
             {
@@ -213,6 +279,16 @@ namespace AdminPanel.Services.ReportTransactionServices
                 AddedCount = resultRows.Count,
                 SkippedDuplicates = skippedReportsCount,
                 Errors = errors
+            };
+        }
+
+        private static ImportExcelConfiguration<T> BuildImportConfig<T>(string sheetName)
+        {
+            return new ImportExcelConfiguration<T>
+            {
+                SheetName = sheetName,
+                StartRow = 2,
+                HasHeader = true
             };
         }
         #endregion
