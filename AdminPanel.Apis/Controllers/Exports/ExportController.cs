@@ -28,18 +28,23 @@ namespace AdminPanel.Apis.Controllers.Exports
         [HttpGet("Products")] // Get: /api/Export/Products
         public async Task<IActionResult> ExportProducts()
         {
-            var request = new ExportRequest<ProductExportToReturnDTO>
+            var requests = new IExportRequest[]
             {
-                WorksheetName = "Products",
-                DataFetcher = async () =>
+                new ExportRequest<ProductExportToReturnDTO>
                 {
-                    var data = await _productService.GetProductForExportAsync();
-                    return data;
+                    WorksheetName = "Products",
+                    DataFetcher = () => _productService.GetProductForExportAsync()
+                },
+                new ExportRequest<ProductImageExportToReturnDTO>
+                {
+                    WorksheetName = "ProductImages",
+                    DataFetcher = () => _productService.GetProductImagesForExportAsync()
                 }
             };
-            var file = await _exportService.ExportAsync(request);
+
+            var file = await _exportService.ExportAsync(requests);
             return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            request.WorksheetName);
+            "Products.xlsx");
         }
         #endregion
 
@@ -47,18 +52,22 @@ namespace AdminPanel.Apis.Controllers.Exports
         [HttpGet("Purchase")] // Get: /api/Export/Purchase
         public async Task<IActionResult> ExportPurchase()
         {
-            var request = new ExportRequest<PurchaseInvoiceExportToReturnDTO>
+            var requests = new IExportRequest[]
             {
-                WorksheetName = "Purchase",
-                DataFetcher = async () =>
+                new ExportRequest<PurchaseInvoiceExportToReturnDTO>
                 {
-                    var data = await _purchaseService.GetPurchaseExport();
-                    return data;
+                    WorksheetName = "Purchase",
+                    DataFetcher = () => _purchaseService.GetPurchaseExport()
+                },
+                new ExportRequest<PurchaseInvoiceItemExportToReturnDTO>
+                {
+                    WorksheetName = "PurchaseItems",
+                    DataFetcher = () => _purchaseService.GetPurchaseItemsExport()
                 }
             };
 
-            var file = await _exportService.ExportAsync(request);
-            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", request.WorksheetName);
+            var file = await _exportService.ExportAsync(requests);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Purchase.xlsx");
         }
         #endregion
 
@@ -66,17 +75,22 @@ namespace AdminPanel.Apis.Controllers.Exports
         [HttpGet("SalesReport")] // Get: /api/Export/SalesReport
         public async Task<IActionResult> ExportSalesReport()
         {
-            var request = new ExportRequest<SalesReportTransactionExportToReturnDTO>
+            var requests = new IExportRequest[]
             {
-                WorksheetName = "SalesReport",
-                DataFetcher = async () =>
+                new ExportRequest<SalesReportTransactionExportToReturnDTO>
                 {
-                    return await _salesReportTransactionService.GetSalesReportForExportAsync();
+                    WorksheetName = "SalesReport",
+                    DataFetcher = () => _salesReportTransactionService.GetSalesReportForExportAsync()
+                },
+                new ExportRequest<SalesReportTransactionItemExportToReturnDTO>
+                {
+                    WorksheetName = "SalesReportItems",
+                    DataFetcher = () => _salesReportTransactionService.GetSalesReportItemsForExportAsync()
                 }
             };
 
-            var file = await _exportService.ExportAsync(request);
-            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", request.WorksheetName);
+            var file = await _exportService.ExportAsync(requests);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "SalesReport.xlsx");
         }
         #endregion
     }

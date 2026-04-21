@@ -23,20 +23,39 @@ namespace AdminPanel.Services.ExportServices
 
         public async Task<byte[]> ExportAsync<T>(ExportRequest<T> request)
         {
-            if(request.DataFetcher == null) throw new ArgumentNullException(nameof(request.DataFetcher));
-            var data = await request.DataFetcher();
+            return await ExportAsync(new[] { request });
+        }
+
+        public async Task<byte[]> ExportAsync(IEnumerable<IExportRequest> requests)
+        {
+            ArgumentNullException.ThrowIfNull(requests);
+
             using var workBook = new XLWorkbook();
-            var workSheet = workBook.Worksheets.Add(request.WorksheetName); // Add sheet
-            var properties = typeof(T).GetProperties();
-            //Set Headers
+            foreach (var request in requests)
+            {
+                var data = await request.FetchDataAsync();
+                AddWorksheet(workBook, request.WorksheetName, request.DataType, data);
+            }
+
+            using var stream = new MemoryStream();
+            workBook.SaveAs(stream);
+            return stream.ToArray();
+        }
+
+        private void AddWorksheet(XLWorkbook workBook, string worksheetName, Type dataType, IReadOnlyList<object> data)
+        {
+            var workSheet = workBook.Worksheets.Add(worksheetName);
+            var properties = dataType.GetProperties();
+
             for (int i = 0; i < properties.Length; i++)
             {
-                var key = properties[i].Name; // name of properties[column name]
-                var localization = _stringLocalizer[key]; // Get Name From Localization
+                var key = properties[i].Name;
+                var localization = _stringLocalizer[key];
                 var headerName = localization.ResourceNotFound
                     ? SplitCamelCase(key) : localization.Value;
-                workSheet.Cell(1, i + 1).Value = headerName; // Set header name
+                workSheet.Cell(1, i + 1).Value = headerName;
             }
+
             int row = 2;
             foreach (var item in data)
             {
@@ -48,27 +67,19 @@ namespace AdminPanel.Services.ExportServices
                 row++;
             }
 
-            workSheet.Columns().AdjustToContents();
-
-            // If Ar
             if (Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName == "ar")
             {
                 workSheet.RightToLeft = true;
             }
 
-            // Table Style
-            var headerRange = workSheet.Range(1, 1, 1, properties.Count());
+            var headerRange = workSheet.Range(1, 1, 1, properties.Length);
             headerRange.Style.Font.Bold = true;
             headerRange.Style.Font.FontColor = XLColor.White;
-            headerRange.Style.Fill.BackgroundColor = XLColor.FromArgb(0, 70, 130); // أزرق غامق
+            headerRange.Style.Fill.BackgroundColor = XLColor.FromArgb(0, 70, 130);
             headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             headerRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
 
             workSheet.Columns().AdjustToContents();
-
-            using var stream = new MemoryStream();
-            workBook.SaveAs(stream);
-            return stream.ToArray();
         }
 
         private string SplitCamelCase(string input)

@@ -5,5 +5,6 @@ namespace AdminPanel.Core.Service_Contract.ExportServices
     public interface IExportService
     {
         Task<byte[]> ExportAsync<T>(ExportRequest<T> request);
+        Task<byte[]> ExportAsync(IEnumerable<IExportRequest> requests);
     }
 }
