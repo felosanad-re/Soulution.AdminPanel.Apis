@@ -20,6 +20,7 @@ namespace AdminPanel.Services.ImportServices
 
         public async Task<ImportToReturnDTO<DTO>> ExcelImportAsync<DTO>(ImportDTO<DTO> req)
         {
+            var config = req.Config ?? new ImportExcelConfiguration<DTO>();
             var result = new ImportToReturnDTO<DTO>()
             {
                 Errors = new List<string>()
@@ -27,7 +28,7 @@ namespace AdminPanel.Services.ImportServices
 
             using var stream = req.File.OpenReadStream();
             using var workbook = new XLWorkbook(stream);
-            var worksheet = workbook.Worksheet(req.Config.SheetName);
+            var worksheet = workbook.Worksheet(config.SheetName);
             var dtos = new List<DTO>();
             var lastRow = worksheet.LastRowUsed()?.RowNumber() ?? 0;
 
@@ -39,9 +40,9 @@ namespace AdminPanel.Services.ImportServices
             }
 
             // Read the header row once, then reuse the real column numbers for every data row.
-            var propertyMap = BuildPropertyMap(worksheet, req.Config, result.Errors);
+            var propertyMap = BuildPropertyMap(worksheet, config, result.Errors);
 
-            for (int rowNum = req.Config.StartRow; rowNum <= lastRow; rowNum++)
+            for (int rowNum = config.StartRow; rowNum <= lastRow; rowNum++)
             {
                 var dto = Activator.CreateInstance<DTO>()!;
 
