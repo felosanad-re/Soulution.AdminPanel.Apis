@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utilities\**" />
+    <EmbeddedResource Remove="Utilities\**" />
+    <None Remove="Utilities\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="ModelsDto\ResponseDTO\Login\" />
     <Folder Include="ModelsDTO\ResponseDTO\Products\" />
   </ItemGroup>

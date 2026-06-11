@@ -11,12 +11,10 @@ namespace AdminPanel.Services.ExportServices
     public class ExportService : IExportService
     {
         #region Services
-        protected readonly IUnitOfWork _unitOfWork;
         protected readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
-        public ExportService(IUnitOfWork unitOfWork, IStringLocalizer<SharedResource> stringLocalizer)
+        public ExportService(IStringLocalizer<SharedResource> stringLocalizer)
         {
-            _unitOfWork = unitOfWork;
             _stringLocalizer = stringLocalizer;
         }
         #endregion
